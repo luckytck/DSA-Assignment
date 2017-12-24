@@ -514,8 +514,6 @@ public class Main {
 
     public static void trackOrder(String username) {
         ListInterface<Order> orderList = File.retrieveList(ORDERFILE);
-
-        Scanner scanner = new Scanner(System.in);
         GregorianCalendar currentDate = new GregorianCalendar();
         boolean gotRecord = false;
 
@@ -1228,7 +1226,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Clocking clocking = new Clocking();
         String checkUsername;
-        boolean isClockOut = false;
 
         System.out.println("\nClock Out");
         System.out.println("======");
@@ -1273,7 +1270,6 @@ public class Main {
                         clocking = new Clocking(deliveryManList.getEntry(i), clocking.getClockInTime(), currentDate);
                         clockingList.add(clocking);
                         File.storeToList(clockingList, CLOCKINGFILE);
-                        isClockOut = true;
                     }
                 } else if (selection.matches("n")) {
                     System.out.println("Clock Out has been cancelled!");
@@ -1368,13 +1364,12 @@ public class Main {
                         System.out.println("=======================");
                         System.out.println("1. Available");
                         System.out.println("2. Break");
-                        System.out.println("3. Delivery");
                         System.out.print("Enter selection (-1 to exit): ");
 
                         try {
                             int selection = scanner.nextInt();
                             scanner.nextLine();
-                            if ((selection < 1 || selection > 4) && selection != -1) {
+                            if ((selection < 1 || selection > 2) && selection != -1) {
                                 System.out.println("\nInvalid Option!!! Please choose an option from the list~");
                             } else if (selection == 1) {
                                 if (deliveryManList.getEntry(i).getWorkingStatus().matches("Available")) {
@@ -1391,22 +1386,6 @@ public class Main {
                                     deliveryManList.getEntry(i).setWorkingStatus("Break");
                                     File.storeList(deliveryManList, "deliveryMan.dat");
                                     System.out.println("Working status has been updated to Break");
-                                }
-                            } else if (selection == 3) {
-                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Delivering")) {
-                                    System.out.println("You already in this status.");
-                                } else {
-                                    deliveryManList.getEntry(i).setWorkingStatus("Delivering");
-                                    File.storeList(deliveryManList, "deliveryMan.dat");
-                                    System.out.println("Working status has been updated to Delivering");
-                                }
-                            } else if (selection == 4) {
-                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Offline")) {
-                                    System.out.println("You already in this status.");
-                                } else {
-                                    deliveryManList.getEntry(i).setWorkingStatus("Offline");
-                                    File.storeList(deliveryManList, "deliveryMan.dat");
-                                    System.out.println("Working status has been updated to Offline");
                                 }
                             } else if (selection == -1) {
                                 System.exit(0);
@@ -1453,8 +1432,8 @@ public class Main {
                 System.out.println("Order Date          : " + order.printOrderDate());
                 System.out.println("Order Time          : " + order.printOrderTime());
                 System.out.println("Order Status        : " + order.getStatus());
-                System.out.println("continue....assign pending delivery to delivery man");
-                
+                System.out.println("-----------------------------------------------------");
+                System.out.println("Order has been assigned to");
                 //Assign Delivery Man
                 Delivery delivery = new Delivery();
                 int entry = 0;

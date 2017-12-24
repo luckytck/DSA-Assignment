@@ -580,16 +580,16 @@ public class Main {
 
     private static void addNewItems(String username) {
         Scanner scanner = new Scanner(System.in);
-        int index = File.getAffiliateIndex(username, AFFILIATEFILE);
+        int index = File.getAffiliateIndex(username, AFFILIATEFILE);//to get the index of affiliate by the username
 
-        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
+        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);//retrive the affiliate from dat file
         int choice = -1;
         do {
             System.out.println("Which type of menu you want to add? :");
             System.out.println("1.Food");
             System.out.println("2.Beverage");
             System.out.print("Enter the number of your choice :");
-            if (!scanner.hasNext("[12]{1}")) {
+            if (!scanner.hasNext("[12]{1}")) {//validate the input
                 System.out.println("\nPlease enter integer.");
             } else {
                 choice = scanner.nextInt();
@@ -597,7 +597,7 @@ public class Main {
                 switch (choice) {
                     case 1: {
 
-                        File.printMenuItem(index, choice);
+                        File.printMenuItem(index, choice);//print the menu items
 
                         System.out.print("Do you want to add new item?(Yes=Y)");
                         char answer2 = scanner.next().charAt(0);
@@ -620,6 +620,7 @@ public class Main {
                                 System.out.print("Discount(%):");
                                 discountrate = scanner.nextDouble();
                                 scanner.nextLine();
+                                //validate the name,price and description
                                 if (!Classes.Validation.ValidateItem(Name, price, discountrate)) {
                                     System.out.println("Invalid input, please enter again.");
                                     System.out.println("\n");
@@ -627,7 +628,7 @@ public class Main {
                             } while (!Classes.Validation.ValidateItem(Name, price, discountrate));
 
                             if (Classes.Validation.ValidateItem(Name, price, discountrate)) {
-                                if (!Classes.Validation.isDuplicateItem(Name, index, choice)) {
+                                if (!Classes.Validation.isDuplicateItem(Name, index, choice)) {//check duplicate item
                                     MenuItem item = new MenuItem();
                                     item.setName(Name);
                                     item.setPrice(price);
@@ -635,7 +636,7 @@ public class Main {
                                     item.setStatus("Available");
                                     item.setDescription(description);
                                     affiliateList.getEntry(index).getFood().add(item);
-                                    File.storeList(affiliateList, AFFILIATEFILE);
+                                    File.storeList(affiliateList, AFFILIATEFILE);//store the affiliate into dat file
 
                                     System.out.println("Your item has been added successful.");
 
@@ -652,7 +653,7 @@ public class Main {
                     }
                     case 2: {
 
-                        File.printMenuItem(index, choice);
+                        File.printMenuItem(index, choice);//print the menu items
 
                         System.out.print("Do you want to add new item?(Yes=Y)");
                         char answer2 = scanner.next().charAt(0);
@@ -678,9 +679,10 @@ public class Main {
                                     System.out.println("Invalid input, please enter again.");
                                     System.out.println("\n");
                                 }
+                                //validate the input value
                             } while (!Classes.Validation.ValidateItem(Name, price, discountrate));
                             if (Classes.Validation.ValidateItem(Name, price, discountrate)) {
-                                if (!Classes.Validation.isDuplicateItem(Name, index, choice)) {
+                                if (!Classes.Validation.isDuplicateItem(Name, index, choice)) {//check duplicate data
                                     MenuItem item = new MenuItem();
                                     item.setName(Name);
                                     item.setPrice(price);
@@ -693,7 +695,7 @@ public class Main {
 
                                     System.out.println("Your item has been added successful.");
 
-                                    File.printMenuItem(index, choice);
+                                    File.printMenuItem(index, choice);//print the menu items
                                 } else {
                                     System.out.println("\nFailed to add, this item already exist.");
                                 }
@@ -711,13 +713,13 @@ public class Main {
                     }
                 }
             }
-            scanner.nextLine();
-        } while (choice != 1 && choice != 2);
+            
+        } while (choice != 1 && choice != 2);// loop when the selection not valid
     }
 
     private static void updateItemDetails(String username) {
-        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
-        int index = File.getAffiliateIndex(username, AFFILIATEFILE);
+        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);//retrive the affilaite
+        int index = File.getAffiliateIndex(username, AFFILIATEFILE);//get the particular affiliate index
         Scanner scanner = new Scanner(System.in);
         System.out.println(affiliateList.getEntry(index).getSortBy());
         int[] choice = new int[3];
@@ -734,7 +736,7 @@ public class Main {
                 choice[0] = scanner.nextInt();
             }
             scanner.nextLine();
-        } while (choice[0] != 1 && choice[0] != 2 && choice[0] != 3 && choice[0] != 4);
+        } while (choice[0] != 1 && choice[0] != 2 && choice[0] != 3 && choice[0] != 4);//loop when the selection not valid
 
         if (choice[0] == 4) {
 
@@ -750,7 +752,7 @@ public class Main {
                     choice[2] = scanner.nextInt();
                 }
                 scanner.nextLine();
-            } while (choice[2] != 1 && choice[2] != 2);
+            } while (choice[2] != 1 && choice[2] != 2);//loop when the selection not valid
             if (choice[2] > 0 && choice[2] < 3) {
                 String sortby;
                 if (choice[2] == 1) {
@@ -759,8 +761,8 @@ public class Main {
                     sortby = "Promotion";
                 }
                 affiliateList.getEntry(index).setSortBy(sortby);
-                File.storeList(affiliateList, AFFILIATEFILE);
-                File.printMenuItem(index, 1);
+                File.storeList(affiliateList, AFFILIATEFILE);//store the updated affiliate into dat file
+                File.printMenuItem(index, 1);//print the menu items
                 File.printMenuItem(index, 2);
                 System.out.println("The order of menu has changed to order by " + sortby);
             }
@@ -781,7 +783,7 @@ public class Main {
             } while (choice[1] != 1 && choice[1] != 2);
             boolean foodEmpty = false;
             boolean beverageEmpty = false;
-            if (affiliateList.getEntry(index).getFood().isEmpty()) {
+            if (affiliateList.getEntry(index).getFood().isEmpty()) {//check whether the menu is empty
                 foodEmpty = true;
             }
             if (affiliateList.getEntry(index).getBeverage().isEmpty()) {
@@ -805,6 +807,7 @@ public class Main {
                         double price = -1;
                         do {
                             System.out.print("New Price :");
+                            //check whether the input is nummeric
                             try {
                                 price = scanner.nextDouble();
                                 scanner.nextLine();
@@ -812,6 +815,7 @@ public class Main {
                                 System.out.println("Price must be a number.");
                             }
                             if (price > -1) {
+                                //get the index sequence in the dat file
                                 int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
                                 affiliateList.getEntry(index).getFood().getEntry(datIndex).setPrice(price);
                                 File.storeList(affiliateList, AFFILIATEFILE);
@@ -842,14 +846,17 @@ public class Main {
                         double price = -1;
                         do {
                             System.out.print("New Price :");
+                            //validate the price
                             try {
                                 price = scanner.nextDouble();
                                 scanner.nextLine();
                             } catch (NumberFormatException e) {
                                 System.out.println("Price must be a number.");
                             }
-                            if (price > -1) {
+                            if (price > -1) {//the price cannot be a negatif number
+                                //get the index sequence in the dat file
                                 int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
+                                //update the item price
                                 affiliateList.getEntry(index).getBeverage().getEntry(datIndex).setPrice(price);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice[1]);
@@ -880,6 +887,7 @@ public class Main {
                         System.out.print("New Description :");
                         description = scanner.nextLine();
                         int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
+                        //update the description of the item
                         affiliateList.getEntry(index).getFood().getEntry(datIndex).setDescription(description);
                         File.storeList(affiliateList, AFFILIATEFILE);
                         File.printMenuItem(index, choice[1]);
@@ -906,6 +914,7 @@ public class Main {
                         System.out.print("New Description :");
                         description = scanner.nextLine();
                         int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
+                        //update the description
                         affiliateList.getEntry(index).getBeverage().getEntry(datIndex).setDescription(description);
                         File.storeList(affiliateList, AFFILIATEFILE);
                         File.printMenuItem(index, choice[1]);
@@ -939,6 +948,7 @@ public class Main {
                             }
                             if (discount >= 0.0 && discount <= 100) {
                                 int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
+                                //update the discount rate of the item
                                 affiliateList.getEntry(index).getFood().getEntry(datIndex).setDiscountRate(discount);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice[1]);
@@ -975,6 +985,7 @@ public class Main {
                             }
                             if (discount >= 0.0 && discount <= 100) {
                                 int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
+                                
                                 affiliateList.getEntry(index).getBeverage().getEntry(datIndex).setDiscountRate(discount);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice[1]);
@@ -1021,6 +1032,7 @@ public class Main {
                                 }
                                 if (choice2 > 0 && choice2 <= affiliateList.getEntry(index).getFood().getNumberOfEntries()) {
                                     int datIndex = File.getDatMenuItemIndex(index, choice, choice2);
+                                    //modify the status of the particular item
                                     if (affiliateList.getEntry(index).getFood().getEntry(datIndex).getStatus().equalsIgnoreCase(up)) {
                                         affiliateList.getEntry(index).getFood().getEntry(datIndex).setStatus(down);
                                     } else {
@@ -1074,13 +1086,14 @@ public class Main {
                     }
                 }
             }
-            scanner.nextLine();
+           
         } while (choice != 1 && choice != 2);
+
 
     }
 
     private static void removeItems(String username) {
-        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
+       ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
         int index = File.getAffiliateIndex(username, AFFILIATEFILE);
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -1116,6 +1129,7 @@ public class Main {
 
                             if (deleted) {
                                 int datIndex = File.getDatMenuItemIndex(index, choice, choice2);
+                                //remove the item from the list
                                 affiliateList.getEntry(index).getFood().remove(datIndex);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice);
@@ -1149,6 +1163,7 @@ public class Main {
 
                             if (deleted) {
                                 int datIndex = File.getDatMenuItemIndex(index, choice, choice2);
+                                //remove the item from the list
                                 affiliateList.getEntry(index).getBeverage().remove(datIndex);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice);
@@ -1165,7 +1180,7 @@ public class Main {
                     }
                 }
             }
-            scanner.nextLine();
+            
 
         } while (choice != 1 && choice != 2);
     }
@@ -1925,7 +1940,7 @@ public class Main {
     }
 
     private static void registerAsAffiliate() {
-        Scanner scanner = new Scanner(System.in);
+         Scanner scanner = new Scanner(System.in);
         ListInterface<Affiliate> affiliateList = new LinearSinglyLinkedList<>();
         affiliateList = File.retrieveList(AFFILIATEFILE);
 
@@ -1940,7 +1955,7 @@ public class Main {
         do {
             System.out.print("Username    :");
             username = scanner.nextLine();
-            if (Validation.CheckDuplicateUsername(username, affiliateList)) {
+            if (Validation.CheckDuplicateUsername(username, affiliateList)) {//check duplicate username
                 System.out.println("The username already exist.");
             }
         } while (Validation.CheckDuplicateUsername(username, affiliateList));
@@ -1957,7 +1972,7 @@ public class Main {
             if (gender != 'M' && gender != 'F') {
                 System.out.println("Please enter M or F.");
             }
-        } while (gender != 'M' && gender != 'F');
+        } while (gender != 'M' && gender != 'F');//validate the gender's input
         scanner.nextLine();
         do {
 
@@ -1967,7 +1982,7 @@ public class Main {
             if (!Validation.ValidateContactNumber(contactNo)) {
                 System.out.println("Please enter a valid contact No.");
             }
-        } while (!Validation.ValidateContactNumber(contactNo));
+        } while (!Validation.ValidateContactNumber(contactNo));//validate the contact number
         System.out.println("");
         System.out.println("Please fill up restaurant's detail :");
         System.out.print("Resaturant Name :");
@@ -1984,7 +1999,7 @@ public class Main {
             if (!Validation.ValidateContactNumber(restaurantContactNo)) {
                 System.out.println("Please enter a valid contact No.");
             }
-        } while (!Validation.ValidateContactNumber(restaurantContactNo));
+        } while (!Validation.ValidateContactNumber(restaurantContactNo));//validate the contact number
 
         System.out.println("");
         System.out.println("Restaurant Location :");
@@ -2006,15 +2021,16 @@ public class Main {
                 System.out.println("Please enter integer.");
                 isNotInteger = true;
             }
-        } while (isNotInteger);
+        } while (isNotInteger);//validate postcode
         char ans;
 
         System.out.print("Are you confirm to register?(Yes = Y) : ");
         ans = scanner.next().charAt(0);
         if (Character.toUpperCase(ans) == 'Y') {
             Address affiliateAddress = new Address(address, state, city, postcode);
+            //declare a Affiliate to store the values
             Affiliate newAffiliate = new Affiliate(restaurantName, businessRegNo, GSTRegNo, restaurantContactNo, affiliateAddress, username, password, name, gender, contactNo);
-            affiliateList.add(newAffiliate);
+            affiliateList.add(newAffiliate);//store the new affiliate into dat file
 
             File.storeList(affiliateList, AFFILIATEFILE);
             System.out.println("\nRegister successful.");

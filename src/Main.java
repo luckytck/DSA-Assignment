@@ -1435,6 +1435,8 @@ public class Main {
     private static void retrievePendingDelivery() {
         Scanner scanner = new Scanner(System.in);
         QueueInterface<Order> orderQueue = File.retrieveQueue(PENDINGDELIVERYFILE);
+        ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        ListInterface<Delivery> deliveryList = File.retrieveList(DELIVERYFILE);
         System.out.println("RETRIEVE PENDING DELIVERY");
         System.out.println("=========================");
         System.out.print("Retrieve next pending delivery? (Y=Yes): ");
@@ -1452,6 +1454,34 @@ public class Main {
                 System.out.println("Order Time          : " + order.printOrderTime());
                 System.out.println("Order Status        : " + order.getStatus());
                 System.out.println("continue....assign pending delivery to delivery man");
+                
+                //Assign Delivery Man
+                Delivery delivery = new Delivery();
+                int entry = 0;
+                boolean isFound = false;
+                for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
+                    if (deliveryManList.getEntry(i).getWorkingStatus().equals("Available")) {
+                        entry = i;
+                        isFound = true;
+                    }
+                }
+                if (isFound == true) {
+                    //store in deliveryman
+                    deliveryManList.getEntry(entry).setWorkingStatus("Delivery");
+                    File.storeList(deliveryManList, DELIVERYMANFILE);
+
+                    //store in delivery
+                    delivery.setDeliveryMan(deliveryManList.getEntry(entry));
+                    File.storeList(deliveryList, DELIVERYFILE);
+
+                    System.out.println("Delivery Man : " + deliveryManList.getEntry(entry).getName());
+                    File.storeQueue(orderQueue, PENDINGDELIVERYFILE);
+
+                } else if (isFound == false) {
+                    System.out.println("Sorry, there are no available delivery man");
+//                    File.storeQueue(orderQueue, PENDINGDELIVERYFILE);
+                    System.exit(0);
+                }
                 System.out.println("---------------------------------------------------------------------");
                 System.out.print("Retrieve next pending delivery? (Y=Yes): ");
                 getNext = scanner.next().charAt(0);

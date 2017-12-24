@@ -534,6 +534,7 @@ public class Main {
     }
 
     public static void trackOrder(String username) {
+        //Retrieve order details
         ListInterface<Order> orderList = File.retrieveList(ORDERFILE);
         GregorianCalendar currentDate = new GregorianCalendar();
         boolean gotRecord = false;
@@ -541,27 +542,32 @@ public class Main {
         System.out.println("Track Food Order");
         System.out.println("===========");
 
-        if (!orderList.isEmpty()) {
+        //Check order list is empty or not
+        if (!orderList.isEmpty()) { 
             System.out.println("Order No \t Restaurant \t\t Order Date \t Order Time \t Order Status \t\t Estimated Remaining Time ");
             for (int i = 1; i <= orderList.getNumberOfEntries(); i++) {
-
+                //match the usersame with the username in order list
                 if (username.equalsIgnoreCase(orderList.getEntry(i).getCustomer().getUsername())) {
 
                     GregorianCalendar orderDate = orderList.getEntry(i).getOrderDate();
-
+                    
+                    //match order date with the today date
                     if (orderDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
                             && orderDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
                             && orderDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
-
+                        
+                         //calculate the deliver remaining time for the order 
                         long hour = (currentDate.get(Calendar.HOUR_OF_DAY) - orderDate.get(Calendar.HOUR_OF_DAY)) * 60;
                         long minutes = currentDate.get(Calendar.MINUTE) - orderDate.get(Calendar.MINUTE);
                         long seconds = (currentDate.get(Calendar.SECOND) - orderDate.get(Calendar.SECOND)) / 60;
 
                         long diff = 60 - (hour + minutes + seconds);
 
-                        if (diff > 60) {
+                        //display the tracked order list to customer
+                        if (diff < 0) { 
                             System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t\t" + orderList.getEntry(i).printOrderDate()
-                                    + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t\t" + " delivered");
+                                    + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t" + " delivered");
+                            gotRecord = true;
 
                         } else if (diff < 60 && diff > 0) {
                             System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t\t" + orderList.getEntry(i).printOrderDate()
@@ -572,7 +578,7 @@ public class Main {
 
                 }
             }
-
+            //if cannot found food order, redirect customer to operation list
             if (gotRecord == false) {
                 System.out.println("You have no food order.");
                 System.out.println("You will be returned back to operation list in 2 seconds...");
@@ -583,7 +589,7 @@ public class Main {
                 }
             }
 
-        } else {
+        } else { //if cannot found food order, redirect customer to operation list
             System.out.println("You have no food order.");
             System.out.println("You will be returned back to operation list in 2 seconds...");
             try {
@@ -1203,6 +1209,7 @@ public class Main {
     }
 
     private static void clockIn(String username) {
+        //retrieve delivery man details and clocking details
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
         LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
         GregorianCalendar currentDate = new GregorianCalendar();
@@ -1214,20 +1221,26 @@ public class Main {
         System.out.println("\nClock In");
         System.out.println("=====");
 
+        //Validate the delivery man
         for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
             checkUsername = deliveryManList.getEntry(i).getUsername();
 
+            //compare delivery man user name
             if (checkUsername.equalsIgnoreCase(username)) {
+                //ask delivery man clock in
                 System.out.print("Are you want to clock in? [y/n]  ");
                 String selection = scanner.next();
-
+                
+                //delivery man choosed clock in
                 if (selection.matches("y")) {
                     GregorianCalendar clockInDate = null;
 
                     for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
                         if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
+                            
                             clockInDate = clockingList.getEntry(j).getClockInTime();
 
+                            //check delivery man has clock in before or not
                             if (clockInDate == null) {
                                 isClockIn = false;
                             } else if (clockInDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
@@ -1237,17 +1250,21 @@ public class Main {
                             }
                         }
                     }
+                    //delivery man already clocked in, display message
                     if (isClockIn == true) {
                         System.out.println("You are already clock in at " + Clocking.printDate(clockInDate) + " " + Clocking.printTime(clockInDate));
+                    //let delivery man clock in
                     } else {
                         System.out.println("Clock In successfully!!");
                         System.out.println("Your Clock In Time for " + Clocking.printDate(currentDate) + " is " + Clocking.printTime(currentDate));
+                        //store details
                         deliveryManList.getEntry(i).setWorkingStatus("Available");
                         File.storeList(deliveryManList, DELIVERYMANFILE);
                         clocking = new Clocking(deliveryManList.getEntry(i), currentDate);
                         clockingList.add(clocking);
                         File.storeToList(clockingList, CLOCKINGFILE);
                     }
+                    //delivery man choose cancel clock in
                 } else if (selection.matches("n")) {
                     System.out.println("Clock In has been cancelled");
                 }
@@ -1256,6 +1273,7 @@ public class Main {
     }
 
     private static void clockOut(String username) {
+        //retrieve delivery man and clocking details
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
         LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
         GregorianCalendar currentDate = new GregorianCalendar();
@@ -1265,18 +1283,22 @@ public class Main {
 
         System.out.println("\nClock Out");
         System.out.println("======");
-
+        
+        //Validate delivery man
         for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
             checkUsername = deliveryManList.getEntry(i).getUsername();
-
+            
+            //check delivery man user name
             if (checkUsername.equalsIgnoreCase(username)) {
                 System.out.print("Are you want to clock out? [y/n]  ");
                 String selection = scanner.next();
-
+                
+                //delivery man choose clock out
                 if (selection.matches("y")) {
                     boolean isClockIn = false;
                     GregorianCalendar clockInDate = null;
-
+                    
+                    //check delivery man has clock in before or not
                     for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
                         if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
                             clockInDate = clockingList.getEntry(j).getClockInTime();
@@ -1289,6 +1311,7 @@ public class Main {
                             }
                         }
                     }
+                    //delivery man did not clock in before
                     if (isClockIn == false) {
                         System.out.println("You are haven't clock in!!");
                         System.out.println("You will be returned back to operation list in 2 seconds...");
@@ -1297,6 +1320,7 @@ public class Main {
                         } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
+                        //let delivery man clock out 
                     } else {
                         System.out.println("Clock Out successfully!!");
                         System.out.println("Your Clock Out Time for " + Clocking.printDate(currentDate) + " is " + Clocking.printTime(currentDate));
@@ -1368,15 +1392,19 @@ public class Main {
     }
 
     private static void updateWorkingStatus(String username) {
+        //retrieve clocking, delivery man details
         LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
         GregorianCalendar currentDate = new GregorianCalendar();
         GregorianCalendar clockInDate = null;
         String strDm;
         Scanner scanner = new Scanner(System.in);
+        
+        //check delivery man list is empty or not
         if (!deliveryManList.isEmpty()) {
             String checkUsername;
-
+            
+            //Validatae delivery man
             for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
                 checkUsername = deliveryManList.getEntry(i).getUsername();
 
@@ -1385,9 +1413,11 @@ public class Main {
 
                     for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
 
+                        //validate the delivery man in clocking list
                         if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
                             clockInDate = clockingList.getEntry(j).getClockInTime();
 
+                            //Check delivery man has clock in or not
                             if (clockingList.getEntry(j).getClockInTime() == null) {
                                 isClockIn = false;
                             } else if (clockInDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
@@ -1397,6 +1427,7 @@ public class Main {
                             }
                         }
                     }
+                    //let delivery man update working status
                     if (isClockIn == true) {
                         System.out.println("Update Delivery Man Working Status");
                         System.out.println("=======================");
@@ -1408,6 +1439,7 @@ public class Main {
                         System.out.println("2. Break");
                         System.out.print("Enter selection (-1 to exit): ");
 
+                        //prompt user selection 
                         try {
                             int selection = scanner.nextInt();
                             scanner.nextLine();
@@ -1437,6 +1469,7 @@ public class Main {
                             scanner.nextLine();
 
                         }
+                        //detected delivery man haven't clock in
                     } else {
                         System.out.println("You are haven't clock in");
                         System.out.println("You will be returned back to operation list in 2 seconds...");
@@ -1480,6 +1513,7 @@ public class Main {
                 System.out.println("Order Status        : " + order.getStatus());
                 System.out.println("-----------------------------------------------------");
                 System.out.println("Order has been assigned to");
+                
                 //Assign Delivery Man
                 Delivery delivery = new Delivery();
                 int entry = 0;
@@ -1499,12 +1533,13 @@ public class Main {
                     delivery.setDeliveryMan(deliveryManList.getEntry(entry));
                     File.storeList(deliveryList, DELIVERYFILE);
 
+                    //store in pending delivery
                     System.out.println("Delivery Man : " + deliveryManList.getEntry(entry).getName());
                     File.storeQueue(orderQueue, PENDINGDELIVERYFILE);
 
+                    //no available delivery man
                 } else if (isFound == false) {
                     System.out.println("Sorry, there are no available delivery man");
-//                    File.storeQueue(orderQueue, PENDINGDELIVERYFILE);
                     System.exit(0);
                 }
                 System.out.println("---------------------------------------------------------------------");

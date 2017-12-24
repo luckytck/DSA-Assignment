@@ -1,10 +1,8 @@
 package ADTs;
 
 import java.io.Serializable;
-
 /**
- * LinkedQueue.java A class that implements the ADT queue by using a circular
- * doubly chain of nodes, with the node implemented as an inner class.
+ * @author Tan Cheong Kiat
  */
 public class CircularDoublyLinkedQueue<T> implements QueueInterface<T>, Serializable {
 

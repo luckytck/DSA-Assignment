@@ -1,7 +1,6 @@
 package ADTs;
 
 import java.io.Serializable;
-
 /**
  * @author Tan Cheong Kiat
  */

@@ -3,7 +3,7 @@ package ADTs;
 
 import java.io.Serializable;
 /**
- * @author Wo Shiou Chein
+ * @author Tan Qi Han
  */
 public class LinearSinglyLinkedList<T> implements ListInterface<T>,Serializable {
 

@@ -1,99 +1,89 @@
-
 package ADTs;
 
 import java.io.Serializable;
 
+public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, Serializable {
 
-public class LinearDoublyLinkedList<T> implements ListInterface<T>,Serializable {
-
-    private Node firstNode;
-    private Node lastNode;
-    private Node temp;
+    private Node firstNode, lastNode;
     private int numberOfEntries;
-    
+
+    public LinearDoublyLinkedList() {
+        clear();
+    }
+
     @Override
-    public boolean add(T newEntry) {
+    public void add(T newEntry) {
         Node newNode = new Node(newEntry);
-        if (isEmpty()) {
+
+        if (firstNode == null) {
             firstNode = newNode;
-            
+            lastNode = newNode;
         } else {
-            lastNode = firstNode.next;
             lastNode.next = newNode;
             newNode.previous = lastNode;
-            lastNode = newNode;
-
         }
+        lastNode = newNode;
+
         numberOfEntries++;
-        return true;
     }
 
     @Override
-    public boolean add(int newPosition, T newEntry) {
-        Node newNode = new Node(newEntry);
-        boolean isAdded = false;
-        if (newPosition >= 1 && newPosition <= numberOfEntries + 1) {
-            if (isEmpty() || newPosition == 1) {
-                firstNode = newNode;
-               
+    public boolean remove(T anEntry) {
+        if (firstNode == null) {
+            return false;
+        }
+
+        boolean found = false;
+        Node temp = firstNode;
+        while (temp != null && !found) {
+            if (temp.data.equals(anEntry)) {
+                found = true;
             } else {
-                Node nodeBefore = firstNode;
-                for (int i = 1; i < newPosition - 1; i++) {
-                    nodeBefore = nodeBefore.next;
-                }
-                Node nodeAfter = nodeBefore.next;
-                newNode.next = nodeAfter;
-                newNode.previous = nodeBefore;
-                nodeBefore.next = newNode;
-                nodeAfter.previous = newNode;
+                temp = temp.next;
             }
-            numberOfEntries++;
-            isAdded = true;
         }
-        return isAdded;
-        
-    }
 
-    @Override
-    public T remove(int givenPosition) {
-        T data = null;
-        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {
-            if (givenPosition == 1) {
-                data = firstNode.data;
-                firstNode =null;
+        if (!found) {
+            return false;
+        } else {
+            if (firstNode == lastNode) {
+                firstNode = lastNode = null;
+
+            } else if (temp.previous == null) {
+                firstNode = temp.next;
+                firstNode.previous = null;
+
+            } else if (temp == lastNode) {
+                lastNode = temp.previous;
+                lastNode.next = null;
             } else {
-                Node nodeBefore = firstNode;
-                for (int i = 1; i < givenPosition - 1; i++) {
-                    nodeBefore = nodeBefore.next;
-                }
-                data = nodeBefore.next.data;
-                Node nodeAfter = nodeBefore.next.next;
-                nodeBefore.next = nodeAfter;
-                nodeAfter.previous = nodeBefore;
+                temp.previous.next = temp.next;
+                temp.next.previous = temp.previous;
             }
-            numberOfEntries--;
+            return true;
+
         }
-        return data;
     }
 
     @Override
-    public void clear() {
-       firstNode = null;
-       numberOfEntries = 0;
+    public boolean contains(T anEntry) {
+        Node temp = firstNode;
+        while (temp != null) {
+            if (temp.data.equals(anEntry)) {
+                return true;
+            } else {
+                temp = temp.next;
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean replace(int givenPosition, T newEntry) {
-         boolean isReplaced = false;
-        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {
-            Node nodeCurrent = firstNode;
-            for (int i = 1; i <= givenPosition - 1; i++) {
-                nodeCurrent = nodeCurrent.next;
-            }
-            nodeCurrent.data = newEntry;
-            isReplaced = true;
+    public boolean isEmpty() {
+        if (firstNode == null) {
+            return true;
         }
-        return isReplaced;
+        return false;
     }
 
     @Override
@@ -110,50 +100,42 @@ public class LinearDoublyLinkedList<T> implements ListInterface<T>,Serializable 
     }
 
     @Override
-    public boolean contains(T anEntry) {
-        boolean isContains = false;
-        for (int i = 1; i <= numberOfEntries; i++) {
-            if (getEntry(i) == anEntry) {
-                isContains = true;
-            }
-        }
-        return isContains;
-    }
-
-    @Override
     public int getNumberOfEntries() {
         return numberOfEntries;
     }
 
     @Override
-    public boolean isEmpty() {
-        if(firstNode == null){
-            return true;
-        }
-        return false;
+    public void clear() {
+        firstNode = null;
+        numberOfEntries = 0;
     }
 
     @Override
-    public boolean isFull() {
-        return false;
+    public String toString() {
+        String str = "";
+        Node temp = firstNode;
+        while (temp != null) {
+            str += temp.data + " ";
+            temp = temp.next;
+        }
+        return str;
     }
-    
-    public class Node implements Serializable{
-        private T data;
-        private Node next;
-        private Node previous;
+
+    private class Node implements Serializable {
+
+        T data;
+        Node next, previous;
 
         public Node(T data) {
             this.data = data;
         }
 
-        public Node(T data,Node next,Node previous ) {
+        public Node(T data, Node next, Node previous) {
             this.data = data;
             this.next = next;
             this.previous = previous;
         }
+
     }
-    
-    
-    
+
 }

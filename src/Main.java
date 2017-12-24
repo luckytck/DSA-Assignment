@@ -1,5 +1,6 @@
 
 import ADTs.CircularDoublyLinkedList;
+import ADTs.LinearDoublyListInterface;
 import ADTs.LinearSinglyLinkedList;
 import ADTs.ListInterface;
 import ADTs.QueueInterface;
@@ -7,6 +8,7 @@ import ADTs.SortedDoublyLinkedList;
 import ADTs.SortedListInterface;
 import Classes.Address;
 import Classes.Affiliate;
+import Classes.Clocking;
 import Classes.Customer;
 import Classes.Delivery;
 import Classes.DeliveryMan;
@@ -43,6 +45,7 @@ public class Main {
     public static final String OPERATIONALSTAFFFILE = "operationalStaff.dat";
     public static final String EXECUTIVEFILE = "executive.dat";
     public static final String DELIVERYFILE = "delivery.dat";
+    public static final String CLOCKINGFILE = "clocking.dat";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -195,12 +198,14 @@ public class Main {
                                                     } else if (selection[2] == 2) {
                                                         //TODO: Clock Out
                                                         clockOut(username);
+                                                        loop[3] = true;
                                                     } else if (selection[2] == 3) {
                                                         //TODO: Retrieve Customer Details
                                                         retrieveCustomerDetails();
                                                     } else if (selection[2] == 4) {
                                                         //TODO: Update Working Status
                                                         updateWorkingStatus(username);
+                                                        loop[3] = true;
                                                     } else {//Logout
                                                         loop[0] = true;
                                                     }
@@ -263,6 +268,7 @@ public class Main {
                                                     } else if (selection[2] == 4) {
                                                         //TODO: Generate Daily Report
                                                         generateDailyReport();
+                                                        loop[3] = true;
                                                     } else {//Logout
                                                         loop[0] = true;
                                                     }
@@ -299,7 +305,6 @@ public class Main {
                             scanner.nextLine();
                             if (selection[1] == 1) {
                                 //TODO: Register As Affiliate
-
                                 registerAsAffiliate();
                             } else {//Return to previous page
                                 loop[0] = true;
@@ -335,7 +340,7 @@ public class Main {
         int choice = 0, menu = 0, food = 0, foodQty = 0, beverage = 0, beverageQty = 0, index;
         String foodRemark, bvgRemark;
         double totalPrice = 0;
-        char more, loop = 0, confirm;
+        char more, confirm;
         GregorianCalendar orderDate = new GregorianCalendar();
         Scanner scanner = new Scanner(System.in);
 
@@ -347,7 +352,7 @@ public class Main {
 
         do {
             System.out.print("Please select a restaurant> ");
-            if (!scanner.hasNext("[1-" + (int) affiliateList.getNumberOfEntries() + "]{1}")) {
+            if (!scanner.hasNext("[1-" + affiliateList.getNumberOfEntries() + "]{1}")) {
                 System.out.println("Please enter valid restaurant");
             } else {
                 choice = scanner.nextInt();
@@ -363,67 +368,60 @@ public class Main {
         affiliate = (Affiliate) affiliateList.getEntry(index);
         File.printWholeMenu(index);
 
-        do {
-            System.out.print("Want to order food/beverage? (1=Food, 2=Beverage, 0=Exit)> ");
-
-            menu = scanner.nextInt();
-            scanner.nextLine();
-            if (menu < 0 || menu > 2) {
-                System.out.println("Please enter number between 0 to 2 only");
-            }
-        } while (menu < 0 || menu > 2);
-
         ListInterface<OrderItem> orderMenu = new LinearSinglyLinkedList<>();
         OrderItem order = new OrderItem(); //temperory store the menu which choose by customer
 
-        if (menu == 1) {
+        do {
             do {
-                do {
-                    System.out.print("Please enter your food number> ");
-                    if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
-                        System.out.println("Please enter valid food number only");
-                    } else {
-                        food = scanner.nextInt();
+                System.out.print("Order food/beverage? (1=Food, 2=Beverage, 0=Exit)> ");
 
-                        if (affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable")) {
-                            System.out.println("This food item unavailable, please choose again.");
-                        }
-                    }
-                    scanner.nextLine();
-                } while (food < 1 || food > affiliateList.getEntry(index).getFood().getNumberOfEntries()
-                        || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
-
-                do {
-                    System.out.print("Quantity> ");
-                    foodQty = scanner.nextInt();
-                    scanner.nextLine();
-                    if (foodQty < 1) {
-                        System.out.println("Food quantity cannot less than 1");
-                    }
-                } while (foodQty < 1);
-
-                System.out.print("Any special remark? Please state down> ");
-                foodRemark = scanner.nextLine();
-
-                int datIndex = File.getDatMenuItemIndex(index, menu, food);
-                order.setMenuItem(affiliateList.getEntry(index).getFood().getEntry(datIndex));
-                order.setQuantity(foodQty);
-                order.setRemark(foodRemark);
-                orderMenu.add(order);
-                order = new OrderItem();
-
-                System.out.print("Choose other food? (Y=Yes, N=No)> ");
-                more = scanner.next().charAt(0);
+                menu = scanner.nextInt();
                 scanner.nextLine();
 
-            } while (Character.toUpperCase(more) == 'Y');
+                if (menu < 0 || menu > 2) {
+                    System.out.println("Please enter number between 0 to 2 only");
+                }
+            } while (menu < 0 || menu > 2);
 
-            System.out.print("Continue to order beverage?(Y=Yes, N=No)");
-            loop = scanner.next().charAt(0);
-            scanner.nextLine();
+            switch (menu) {
+                case 1:
+                    do {
+                        System.out.print("Please enter your food number> ");
+                        if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
+                            System.out.println("Please enter valid food number only");
+                        } else {
+                            food = scanner.nextInt();
 
-            if (Character.toUpperCase(loop) == 'Y') {
-                do {
+                            if (affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable")) {
+                                System.out.println("This food item unavailable, please choose again.");
+                            }
+                        }
+                        scanner.nextLine();
+                    } while (food < 1 || food > affiliateList.getEntry(index).getFood().getNumberOfEntries()
+                            || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
+
+                    do {
+                        System.out.print("Quantity> ");
+                        foodQty = scanner.nextInt();
+                        scanner.nextLine();
+                        if (foodQty < 1) {
+                            System.out.println("Food quantity cannot less than 1");
+                        }
+                    } while (foodQty < 1);
+
+                    System.out.print("Any special remark? Please state down> ");
+                    foodRemark = scanner.nextLine();
+
+                    int datIndex = File.getDatMenuItemIndex(index, menu, food);
+                    order.setMenuItem(affiliateList.getEntry(index).getFood().getEntry(datIndex));
+                    order.setQuantity(foodQty);
+                    order.setRemark(foodRemark);
+                    orderMenu.add(order);
+                    order = new OrderItem();
+
+                    break;
+
+                case 2:
                     do {
                         System.out.print("Please enter your beverage number> ");
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
@@ -451,126 +449,43 @@ public class Main {
 
                     System.out.print("Any special remark? Please state down> ");
                     bvgRemark = scanner.nextLine();
-
-                    int datIndex = File.getDatMenuItemIndex(index, menu, beverage);
-                    order.setMenuItem(affiliateList.getEntry(index).getBeverage().getEntry(datIndex));
+                    menu = 2;
+                    int dat2Index = File.getDatMenuItemIndex(index, menu, beverage);
+                    order.setMenuItem(affiliateList.getEntry(index).getBeverage().getEntry(dat2Index));
                     order.setQuantity(beverageQty);
                     order.setRemark(bvgRemark);
                     orderMenu.add(order);
                     order = new OrderItem();
+                    break;
 
-                    System.out.print("Choose other beverage? (Y=Yes, N=No)> ");
-                    more = scanner.next().charAt(0);
-                    scanner.nextLine();
-                } while (Character.toUpperCase(more) == 'Y');
+                case 0:
+                    System.out.println("Thanks for using this function. See you again~");
+                    System.exit(0);
+
+                    break;
             }
-        } else if (menu == 2) {
 
-            do {
-                do {
-                    System.out.print("Please enter your beverage number> ");
-                    if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
-                        System.out.println("Please enter valid beverage number only");
-                    } else {
-                        beverage = scanner.nextInt();
-
-                        if (affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable")) {
-                            System.out.println("This beverage item unavailable, please choose again.");
-                        }
-                    }
-                    scanner.nextLine();
-
-                } while (beverage < 1 || beverage > affiliateList.getEntry(index).getBeverage().getNumberOfEntries()
-                        || affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable"));
-
-                do {
-                    System.out.print("Quantity> ");
-                    beverageQty = scanner.nextInt();
-                    scanner.nextLine();
-                    if (beverageQty < 1) {
-                        System.out.println("Beverage quantity cannot less than 1");
-                    }
-                } while (beverageQty < 1);
-
-                System.out.print("Any special remark? Please state down> ");
-                bvgRemark = scanner.nextLine();
-
-                int datIndex = File.getDatMenuItemIndex(index, menu, beverage);
-                order.setMenuItem(affiliateList.getEntry(index).getBeverage().getEntry(datIndex));
-                order.setQuantity(beverageQty);
-                order.setRemark(bvgRemark);
-                orderMenu.add(order);
-                order = new OrderItem();
-
-                System.out.print("Choose other beverage? (Y=Yes, N=No)> ");
-                more = scanner.next().charAt(0);
-                scanner.nextLine();
-
-            } while (Character.toUpperCase(more) == 'Y');
-
-            System.out.print("Continue to order food?(Y=Yes, N=No)");
-            loop = scanner.next().charAt(0);
+            System.out.println("\n");
+            System.out.print("Wanna choose other food/beverage? (Y=Yes, N=No)> ");
+            more = scanner.next().charAt(0);
             scanner.nextLine();
 
-            if (Character.toUpperCase(loop) == 'Y') {
-                do {
-                    do {
-                        System.out.print("Please enter your food number> ");
-                        if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
-                            System.out.println("Please enter valid food number only");
-                        } else {
-                            food = scanner.nextInt();
-                            if (affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable")) {
-                                System.out.println("This food item unavailable, please choose again.");
-                            }
-                        }
-                        scanner.nextLine();
-
-                    } while (food < 1 || food > affiliateList.getEntry(index).getFood().getNumberOfEntries()
-                            || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
-
-                    do {
-                        System.out.print("Quantity> ");
-                        foodQty = scanner.nextInt();
-                        scanner.nextLine();
-                        if (foodQty < 1) {
-                            System.out.println("Food quantity cannot less than 1");
-                        }
-                    } while (foodQty < 1);
-
-                    System.out.print("Any special remark? Please state down> ");
-                    foodRemark = scanner.nextLine();
-
-                    int datIndex = File.getDatMenuItemIndex(index, menu, food);
-                    order.setMenuItem(affiliateList.getEntry(index).getFood().getEntry(datIndex));
-                    order.setQuantity(foodQty);
-                    order.setRemark(foodRemark);
-                    orderMenu.add(order);
-                    order = new OrderItem();
-
-                    System.out.print("Choose other food? (Y=Yes, N=No)> ");
-                    more = scanner.next().charAt(0);
-                    scanner.nextLine();
-
-                } while (Character.toUpperCase(more) == 'Y');
-            }
-        } else if (menu == 0) {
-            System.out.println("Thanks for using this function. See you again~");
-            System.exit(0);
-        }
+        } while (Character.toUpperCase(more) == 'Y');
 
         System.out.println("CONFIRM YOUR ORDER:");
         System.out.println("===================");
-        System.out.println("No.\tItem\t\t\tUnit Price\tDiscount Price\t\tQuantity\tSub Total");
+        System.out.println("No.\tItem\t\t\tUnit Price\tDiscount Price\t\tQuantity\tSub Total\tRemark");
         for (int i = 1; i <= orderMenu.getNumberOfEntries(); ++i) {
             System.out.println(i + "\t" + orderMenu.getEntry(i).getMenuItem().getName()
                     + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).getMenuItem().getPrice())
                     + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).calPriceAfterDiscount())
                     + "\t\t\t" + orderMenu.getEntry(i).getQuantity()
-                    + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).calSubTotal()));
+                    + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).calSubTotal())
+                    + "\t" + orderMenu.getEntry(i).getRemark());
             totalPrice += orderMenu.getEntry(i).calSubTotal();
         }
         System.out.println("\n");
+        System.out.println("Total item ordered: " + orderMenu.getNumberOfEntries());
         System.out.println("Total Price: RM" + String.format("%.2f", totalPrice));
         System.out.print("Confirm order? (Y=Yes, N=No)> ");
         confirm = scanner.next().charAt(0);
@@ -580,23 +495,85 @@ public class Main {
             ListInterface<Order> orderList = File.retrieveList(ORDERFILE);
             Order.setNextOrderNo(1000 + orderList.getNumberOfEntries());
 
-            QueueInterface<Order> orderQueue = File.retrieveQueue(PENDINGDELIVERYFILE);
+            QueueInterface<Order> orderQueue = File.retrieveOrder(PENDINGDELIVERYFILE);
 
             Order confirmOrder = new Order(orderMenu, customer, affiliate, orderDate);
             orderList.add(confirmOrder);
             File.storeList(orderList, ORDERFILE);
 
             orderQueue.enqueue(confirmOrder);
-            File.storeQueue(orderQueue, PENDINGDELIVERYFILE);
+            File.storeOrder(orderQueue, PENDINGDELIVERYFILE);
 
-            System.out.println("Your order stored successfully. Thank you!");
+            System.out.println("Your order stored successfully.");
+            System.out.println("Your meal will be delivered within 1 hour. Thank you!");
+
         } else {
-            System.out.println("Thanks for using this function");
+            System.out.println("Thanks for using this function, please come again~");
         }
     }
 
     public static void trackOrder(String username) {
+        ListInterface<Order> orderList = File.retrieveList(ORDERFILE);
 
+        Scanner scanner = new Scanner(System.in);
+        GregorianCalendar currentDate = new GregorianCalendar();
+        boolean gotRecord = false;
+
+        System.out.println("Track Food Order");
+        System.out.println("===========");
+
+        if (!orderList.isEmpty()) {
+            System.out.println("Order No \t Restaurant \t\t Order Date \t Order Time \t Order Status \t\t Estimated Remaining Time ");
+            for (int i = 1; i <= orderList.getNumberOfEntries(); i++) {
+
+                if (username.equalsIgnoreCase(orderList.getEntry(i).getCustomer().getUsername())) {
+
+                    GregorianCalendar orderDate = orderList.getEntry(i).getOrderDate();
+
+                    if (orderDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
+                            && orderDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
+                            && orderDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+
+                        long hour = (currentDate.get(Calendar.HOUR_OF_DAY) - orderDate.get(Calendar.HOUR_OF_DAY)) * 60;
+                        long minutes = currentDate.get(Calendar.MINUTE) - orderDate.get(Calendar.MINUTE);
+                        long seconds = (currentDate.get(Calendar.SECOND) - orderDate.get(Calendar.SECOND)) / 60;
+
+                        long diff = 60 - (hour + minutes + seconds);
+
+                        if (diff > 60) {
+                            System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t\t" + orderList.getEntry(i).printOrderDate()
+                                    + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t\t" + " delivered");
+
+                        } else if (diff < 60 && diff > 0) {
+                            System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t" + orderList.getEntry(i).printOrderDate()
+                                    + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t" + diff + " minute(s)");
+                            gotRecord = true;
+                        }
+                    }
+
+                }
+            }
+
+            if (gotRecord == false) {
+                System.out.println("You have no food order.");
+                System.out.println("You will be returned back to operation list in 2 seconds...");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+        } else {
+            System.out.println("You have no food order.");
+            System.out.println("You will be returned back to operation list in 2 seconds...");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+
+        }
     }
 
     private static void addNewItems(String username) {
@@ -1192,11 +1169,118 @@ public class Main {
     }
 
     private static void clockIn(String username) {
+        ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
+        GregorianCalendar currentDate = new GregorianCalendar();
+        Scanner scanner = new Scanner(System.in);
+        String checkUsername;
+        Clocking clocking = new Clocking();
+        boolean isClockIn = false;
 
+        System.out.println("\nClock In");
+        System.out.println("=====");
+
+        for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
+            checkUsername = deliveryManList.getEntry(i).getUsername();
+
+            if (checkUsername.equalsIgnoreCase(username)) {
+                System.out.print("Are you want to clock in? [y/n]  ");
+                String selection = scanner.next();
+
+                if (selection.matches("y")) {
+                    GregorianCalendar clockInDate = null;
+
+                    for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
+                        if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
+                            clockInDate = clockingList.getEntry(j).getClockInTime();
+
+                            if (clockInDate == null) {
+                                isClockIn = false;
+                            } else if (clockInDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
+                                    && clockInDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
+                                    && clockInDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+                                isClockIn = true;
+                            }
+                        }
+                    }
+                    if (isClockIn == true) {
+                        System.out.println("You are already clock in at " + Clocking.printDate(clockInDate) + " " + Clocking.printTime(clockInDate));
+                    } else {
+                        System.out.println("Clock In successfully!!");
+                        System.out.println("Your Clock In Time for " + Clocking.printDate(currentDate) + " is " + Clocking.printTime(currentDate));
+                        deliveryManList.getEntry(i).setWorkingStatus("Available");
+                        File.storeList(deliveryManList, DELIVERYMANFILE);
+                        clocking = new Clocking(deliveryManList.getEntry(i), currentDate);
+                        clockingList.add(clocking);
+                        File.storeToList(clockingList, CLOCKINGFILE);
+                    }
+                } else if (selection.matches("n")) {
+                    System.out.println("Clock In has been cancelled");
+                }
+            }
+        }
     }
 
     private static void clockOut(String username) {
+        ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
+        GregorianCalendar currentDate = new GregorianCalendar();
+        Scanner scanner = new Scanner(System.in);
+        Clocking clocking = new Clocking();
+        String checkUsername;
+        boolean isClockOut = false;
 
+        System.out.println("\nClock Out");
+        System.out.println("======");
+
+        for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
+            checkUsername = deliveryManList.getEntry(i).getUsername();
+
+            if (checkUsername.equalsIgnoreCase(username)) {
+                System.out.print("Are you want to clock out? [y/n]  ");
+                String selection = scanner.next();
+
+                if (selection.matches("y")) {
+                    boolean isClockIn = false;
+                    GregorianCalendar clockInDate = null;
+
+                    for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
+                        if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
+                            clockInDate = clockingList.getEntry(j).getClockInTime();
+                            if (clockInDate == null) {
+                                isClockIn = false;
+                            } else if (clockInDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
+                                    && clockInDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
+                                    && clockInDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+                                isClockIn = true;
+                            }
+                        }
+                    }
+                    if (isClockIn == false) {
+                        System.out.println("You are haven't clock in!!");
+                        System.out.println("You will be returned back to operation list in 2 seconds...");
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                    } else {
+                        System.out.println("Clock Out successfully!!");
+                        System.out.println("Your Clock Out Time for " + Clocking.printDate(currentDate) + " is " + Clocking.printTime(currentDate));
+                        System.out.println("Total working hour(s) for today is " + clocking.calWorkingHours());
+                        deliveryManList.getEntry(i).setWorkingStatus("Offline");
+                        File.storeList(deliveryManList, DELIVERYMANFILE);
+                        clocking = new Clocking(deliveryManList.getEntry(i), clocking.getClockInTime(), currentDate);
+                        clockingList.add(clocking);
+                        File.storeToList(clockingList, CLOCKINGFILE);
+                        isClockOut = true;
+                    }
+                } else if (selection.matches("n")) {
+                    System.out.println("Clock Out has been cancelled!");
+
+                }
+            }
+        }
     }
 
     private static void retrieveCustomerDetails() {
@@ -1246,72 +1330,100 @@ public class Main {
     }
 
     private static void updateWorkingStatus(String username) {
-
+        LinearDoublyListInterface<Clocking> clockingList = File.retrieveFromList(CLOCKINGFILE);
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        GregorianCalendar currentDate = new GregorianCalendar();
+        GregorianCalendar clockInDate = null;
         String strDm;
         Scanner scanner = new Scanner(System.in);
         if (!deliveryManList.isEmpty()) {
             String checkUsername;
+
             for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
                 checkUsername = deliveryManList.getEntry(i).getUsername();
 
                 if (checkUsername.matches(username)) {
+                    boolean isClockIn = false;
 
-                    System.out.println("Update Delivery Man Working Status");
-                    System.out.println("=======================");
-                    strDm = "Name: " + deliveryManList.getEntry(i).getName() + "\n" + "Contact No: " + deliveryManList.getEntry(i).getContactNo()
-                            + "\n" + "Working Status: " + deliveryManList.getEntry(i).getWorkingStatus();
-                    System.out.println(strDm);
-                    System.out.println("=======================");
-                    System.out.println("1. Available");
-                    System.out.println("2. Break");
-                    System.out.println("3. Delivering");
-                    System.out.print("Enter selection (-1 to exit): ");
+                    for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
 
-                    try {
-                        int selection = scanner.nextInt();
-                        scanner.nextLine();
-                        if ((selection < 1 || selection > 4) && selection != -1) {
-                            System.out.println("\nInvalid Option!!! Please choose an option from the list~");
-                        } else if (selection == 1) {
-                            if (deliveryManList.getEntry(i).getWorkingStatus().matches("Available")) {
-                                System.out.println("You already in this status.");
-                            } else {
-                                deliveryManList.getEntry(i).setWorkingStatus("Available");
-                                File.storeList(deliveryManList, "deliveryMan.dat");
-                                System.out.println("Working status has been updated to Available");
+                        if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
+                            clockInDate = clockingList.getEntry(j).getClockInTime();
+
+                            if (clockingList.getEntry(j).getClockInTime() == null) {
+                                isClockIn = false;
+                            } else if (clockInDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
+                                    && clockInDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
+                                    && clockInDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+                                isClockIn = true;
                             }
-                        } else if (selection == 2) {
-                            if (deliveryManList.getEntry(i).getWorkingStatus().matches("Break")) {
-                                System.out.println("You already in this status.");
-                            } else {
-                                deliveryManList.getEntry(i).setWorkingStatus("Break");
-                                File.storeList(deliveryManList, "deliveryMan.dat");
-                                System.out.println("Working status has been updated to Break");
-                            }
-                        } else if (selection == 3) {
-                            if (deliveryManList.getEntry(i).getWorkingStatus().matches("Delivering")) {
-                                System.out.println("You already in this status.");
-                            } else {
-                                deliveryManList.getEntry(i).setWorkingStatus("Delivering");
-                                File.storeList(deliveryManList, "deliveryMan.dat");
-                                System.out.println("Working status has been updated to Delivering");
-                            }
-                        } else if (selection == 4) {
-                            if (deliveryManList.getEntry(i).getWorkingStatus().matches("Offline")) {
-                                System.out.println("You already in this status.");
-                            } else {
-                                deliveryManList.getEntry(i).setWorkingStatus("Offline");
-                                File.storeList(deliveryManList, "deliveryMan.dat");
-                                System.out.println("Working status has been updated to Offline");
-                            }
-                        } else if (selection == -1) {
-                            System.exit(0);
                         }
-                    } catch (Exception e) {
-                        System.out.println("Invalid Option!!! Please enter numeric value only~");
-                        scanner.nextLine();
+                    }
+                    if (isClockIn == true) {
+                        System.out.println("Update Delivery Man Working Status");
+                        System.out.println("=======================");
+                        strDm = "Name: " + deliveryManList.getEntry(i).getName() + "\n" + "Contact No: " + deliveryManList.getEntry(i).getContactNo()
+                                + "\n" + "Working Status: " + deliveryManList.getEntry(i).getWorkingStatus();
+                        System.out.println(strDm);
+                        System.out.println("=======================");
+                        System.out.println("1. Available");
+                        System.out.println("2. Break");
+                        System.out.println("3. Delivery");
+                        System.out.print("Enter selection (-1 to exit): ");
 
+                        try {
+                            int selection = scanner.nextInt();
+                            scanner.nextLine();
+                            if ((selection < 1 || selection > 4) && selection != -1) {
+                                System.out.println("\nInvalid Option!!! Please choose an option from the list~");
+                            } else if (selection == 1) {
+                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Available")) {
+                                    System.out.println("You already in this status.");
+                                } else {
+                                    deliveryManList.getEntry(i).setWorkingStatus("Available");
+                                    File.storeList(deliveryManList, "deliveryMan.dat");
+                                    System.out.println("Working status has been updated to Available");
+                                }
+                            } else if (selection == 2) {
+                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Break")) {
+                                    System.out.println("You already in this status.");
+                                } else {
+                                    deliveryManList.getEntry(i).setWorkingStatus("Break");
+                                    File.storeList(deliveryManList, "deliveryMan.dat");
+                                    System.out.println("Working status has been updated to Break");
+                                }
+                            } else if (selection == 3) {
+                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Delivering")) {
+                                    System.out.println("You already in this status.");
+                                } else {
+                                    deliveryManList.getEntry(i).setWorkingStatus("Delivering");
+                                    File.storeList(deliveryManList, "deliveryMan.dat");
+                                    System.out.println("Working status has been updated to Delivering");
+                                }
+                            } else if (selection == 4) {
+                                if (deliveryManList.getEntry(i).getWorkingStatus().matches("Offline")) {
+                                    System.out.println("You already in this status.");
+                                } else {
+                                    deliveryManList.getEntry(i).setWorkingStatus("Offline");
+                                    File.storeList(deliveryManList, "deliveryMan.dat");
+                                    System.out.println("Working status has been updated to Offline");
+                                }
+                            } else if (selection == -1) {
+                                System.exit(0);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Invalid Option!!! Please enter numeric value only~");
+                            scanner.nextLine();
+
+                        }
+                    } else {
+                        System.out.println("You are haven't clock in");
+                        System.out.println("You will be returned back to operation list in 2 seconds...");
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
 
                 }
@@ -1756,6 +1868,9 @@ public class Main {
                 System.out.printf("%-4s %-20s %-6s %-12s %-13s %-13s\n", "ID", "NAME", "GENDER", "CONTACT_NO", "OOMPLETED_DEL", "DIST_TRAVELLED(m)");
                 for (int i = reportList.getLength(); i >= 1; i--) {
                     System.out.println(reportList.getEntry(i));
+                }
+                if (count == 0) {
+                    System.out.println("No Delivery Man Found");
                 }
             }
 

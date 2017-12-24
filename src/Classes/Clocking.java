@@ -50,14 +50,14 @@ public class Clocking implements Serializable{
         this.clockOutTime = clockOutTime;
     }
     
-    public String printDate(GregorianCalendar date){
+    public static String printDate(GregorianCalendar date){
         if (date != null) {
             return String.format("%02d/%02d/%04d", date.get(Calendar.DAY_OF_MONTH), (date.get(Calendar.MONTH) + 1), date.get(Calendar.YEAR));
         }
         return "null";
     }
     
-    public String printTime(GregorianCalendar time){
+    public static String printTime(GregorianCalendar time){
         String AM_PM = "";
         if (time != null) {
             if (time.get(Calendar.AM_PM) == 1) {

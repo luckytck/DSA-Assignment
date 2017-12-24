@@ -3,9 +3,6 @@ package ADTs;
 // Tan Qi Han
 // RSD2 G2
 // 17WMR09515
-
-
-
 public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
 
     private Node topNode;   

@@ -66,7 +66,7 @@ public class Main {
             } else {
                 selection[0] = scanner.nextInt();
                 scanner.nextLine();
-                if (selection[0] == 1) {
+                if (selection[0] == 1) {//Login
                     do {
                         loop[1] = false;
                         System.out.println("Type Of Account");
@@ -131,9 +131,11 @@ public class Main {
                                                     if (selection[2] == 1) {
                                                         //TODO: Place Ad-hoc Order
                                                         placeAdHocOrder(username);
+                                                        loop[3] = true;
                                                     } else if (selection[2] == 2) {
                                                         //TODO: Track Order
                                                         trackOrder(username);
+                                                        loop[3] = true;
                                                     } else {//Logout
                                                         loop[0] = true;
                                                     }
@@ -195,6 +197,7 @@ public class Main {
                                                     if (selection[2] == 1) {
                                                         //TODO: Clock In
                                                         clockIn(username);
+                                                        loop[3] = true;
                                                     } else if (selection[2] == 2) {
                                                         //TODO: Clock Out
                                                         clockOut(username);
@@ -202,6 +205,7 @@ public class Main {
                                                     } else if (selection[2] == 3) {
                                                         //TODO: Retrieve Customer Details
                                                         retrieveCustomerDetails();
+                                                        loop[3] = true;
                                                     } else if (selection[2] == 4) {
                                                         //TODO: Update Working Status
                                                         updateWorkingStatus(username);
@@ -543,7 +547,7 @@ public class Main {
                                     + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t\t" + " delivered");
 
                         } else if (diff < 60 && diff > 0) {
-                            System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t" + orderList.getEntry(i).printOrderDate()
+                            System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t\t" + orderList.getEntry(i).printOrderDate()
                                     + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t" + diff + " minute(s)");
                             gotRecord = true;
                         }
@@ -1413,8 +1417,11 @@ public class Main {
 
     private static void retrievePendingDelivery() {
         Scanner scanner = new Scanner(System.in);
+        //Retrieve pending delivery
         QueueInterface<Order> orderQueue = File.retrieveQueue(PENDINGDELIVERYFILE);
+        //Retrieve delivery man list
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        //Retrieve delivery list
         ListInterface<Delivery> deliveryList = File.retrieveList(DELIVERYFILE);
         System.out.println("RETRIEVE PENDING DELIVERY");
         System.out.println("=========================");
@@ -1422,6 +1429,7 @@ public class Main {
         char getNext = scanner.next().charAt(0);
         while (Character.toUpperCase(getNext) == 'Y') {
             if (!orderQueue.isEmpty()) {
+                //dequeue pending delivery
                 Order order = orderQueue.dequeue();
                 System.out.println("ORDER DETAILS");
                 System.out.println("=============");
@@ -1477,13 +1485,11 @@ public class Main {
         }
     }
 
-    private static void retrieveScheduledOrders() {
-
-    }
-
     private static void addNewDeliveryMan() {
         Scanner scanner = new Scanner(System.in);
+        //Retrieve delivery man list
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
+        //Set delivery man next id
         DeliveryMan.setNextID(1000 + deliveryManList.getNumberOfEntries());
         char addOther;
         do {
@@ -1492,6 +1498,7 @@ public class Main {
             System.out.println("Please enter following details:");
             System.out.print("                 Username : ");
             String username = scanner.nextLine();
+            //Check duplicate username
             while (Validation.CheckDuplicateUsername(username, deliveryManList)) {
                 System.out.println("Sorry, this username already exist.");
                 System.out.println("Please try other username.");
@@ -1503,13 +1510,16 @@ public class Main {
             System.out.print("                     Name : ");
             String name = scanner.nextLine();
             System.out.print("             Gender (M/F) : ");
+            //Validate gender
             while (!scanner.hasNext("[mMfF]{1}")) {
                 System.out.println("Please enter character [M/F] only");
                 System.out.print("             Gender (M/F) : ");
                 scanner.next();
             }
             char gender = scanner.next().charAt(0);
+            scanner.nextLine();
             System.out.print("Contact No.(01#-########) : ");
+            //Validate contact no.
             while (!scanner.hasNext("01[0-9]{1}-[0-9]{7,8}")) {
                 System.out.println("Please enter a valid contact number.");
                 System.out.print("Contact No.(01#-########) : ");
@@ -1517,6 +1527,7 @@ public class Main {
             }
             String contactNo = scanner.next();
             scanner.nextLine();
+            //Validate NRIC
             System.out.print("     NRIC(######-##-####) : ");
             while (!scanner.hasNext("[0-9]{6}-[0-9]{2}-[0-9]{4}")) {
                 System.out.println("Please enter a valid NRIC.");
@@ -1526,6 +1537,7 @@ public class Main {
             String NRIC = scanner.next();
             scanner.nextLine();
             System.out.print("            Email Address : ");
+            //Validate email address
             while (!scanner.hasNext("([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})")) {
                 System.out.println("Please enter a valid email address.");
                 System.out.print("            Email Address : ");
@@ -1540,6 +1552,7 @@ public class Main {
             System.out.print("                     City : ");
             String city = scanner.nextLine();
             System.out.print("        Postcode(5-digit) : ");
+            //Validate postcode
             while (!scanner.hasNext("[0-9]{5}")) {
                 System.out.println("Please enter 5-digit postcode.");
                 System.out.print("        Postcode(5-digit) : ");
@@ -1548,6 +1561,7 @@ public class Main {
             int postcode = scanner.nextInt();
             scanner.nextLine();
             System.out.print("         Basic Salary(RM) : ");
+            //Check is numeric value
             while (!scanner.hasNextDouble()) {
                 System.out.println("Please enter numeric value.");
                 System.out.print("         Basic Salary(RM) : ");
@@ -1555,16 +1569,19 @@ public class Main {
             }
             double basicSalary = scanner.nextDouble();
             scanner.nextLine();
+            //Confirmation
             System.out.print("Confirm to add a new delivery man? (Y=Yes): ");
             char confirmation = scanner.next().charAt(0);
             scanner.nextLine();
             if (Character.toUpperCase(confirmation) == 'Y') {
+                //Update & Store delivery man list
                 Address fullAddress = new Address(address, state, city, postcode);
                 DeliveryMan newDeliveryMan = new DeliveryMan(NRIC, email, basicSalary, fullAddress, username, password, name, Character.toUpperCase(gender), contactNo);
                 deliveryManList.add(newDeliveryMan);
                 File.storeList(deliveryManList, DELIVERYMANFILE);
                 System.out.println("Added Successfully!!!");
             } else {
+                //Cancelled
                 System.out.println("Operation Cancelled!!!");
             }
             System.out.print("Do you want to add another delivery man? (Y=Yes): ");
@@ -1581,13 +1598,14 @@ public class Main {
 
     private static void updateDeliveryManContactDetails() {
         Scanner scanner = new Scanner(System.in);
+        //Retrieve delivery man list
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
-        DeliveryMan.setNextID(1000 + deliveryManList.getNumberOfEntries());
         int count = deliveryManList.getNumberOfEntries();
         int selection[] = new int[2];
         boolean loop[] = new boolean[3];
         do {
             loop[0] = false;
+            //Display delivery man list
             System.out.println("Update Delivery Man Contact Details");
             System.out.println("===================================");
             System.out.println(String.format("%-3s %-4s %-10s %-20s %-6s %-12s %-14s %-20s %-12s %-80s %-10s %-14s", "NO.", "ID", "USERNAME", "NAME", "GENDER", "CONTACT_NO", "NRIC", "EMAIL", "BASIC_SALARY", "ADDRESS", "STATUS", "WORKING_STATUS"));
@@ -1596,6 +1614,7 @@ public class Main {
             }
             if (count != 0) {
                 System.out.print("Please select a delivery man you want to update (0 to cancel): ");
+                //Check is numeric value
                 if (!scanner.hasNextInt()) {
                     System.out.println("Please enter numeric value only.");
                     scanner.nextLine();
@@ -1603,6 +1622,7 @@ public class Main {
                 } else {
                     selection[0] = scanner.nextInt();
                     scanner.nextLine();
+                    //Check valid option
                     if (selection[0] >= 0 && selection[0] <= count) {
                         if (selection[0] != 0) {
                             do {
@@ -1613,6 +1633,7 @@ public class Main {
                                 System.out.println("2. Address");
                                 System.out.println("0. Reselect Delivery Man");
                                 System.out.print("Please select a contact detail you want to update: ");
+                                //Check valid option
                                 if (!scanner.hasNext("[012]{1}")) {
                                     System.out.println("Please select option [0-2] only.");
                                     scanner.nextLine();
@@ -1630,7 +1651,9 @@ public class Main {
                                             System.out.println("---------------------");
                                             System.out.print("New Contact No.(01#-########): ");
                                             String newContactNo = scanner.nextLine();
+                                            //Validate contact no.
                                             if (Validation.ValidateContactNumber(newContactNo)) {
+                                                //Update and Store delivery man list
                                                 deliveryManList.getEntry(selection[0]).setContactNo(newContactNo);
                                                 File.storeList(deliveryManList, DELIVERYMANFILE);
                                                 System.out.println("Updated Successfully!!!");
@@ -1641,6 +1664,7 @@ public class Main {
                                                     loop[1] = true;
                                                 }
                                             } else {
+                                                //Prompt error
                                                 System.out.println("Please enter a valid contact number.");
                                                 loop[2] = true;
                                             }
@@ -1668,6 +1692,7 @@ public class Main {
                                             System.out.print("New City    : ");
                                             String newCity = scanner.nextLine();
                                             System.out.print("New Postcode: ");
+                                            //Validate postcode
                                             while (!scanner.hasNext("[0-9]{5}")) {
                                                 System.out.println("Please enter 5-digit postcode.");
                                                 System.out.print("New Postcode: ");
@@ -1675,6 +1700,7 @@ public class Main {
                                             }
                                             int newPostcode = scanner.nextInt();
                                             scanner.nextLine();
+                                            //Update & Store delivery man list
                                             Address newFullAddress = new Address(newAddress, newState, newCity, newPostcode);
                                             deliveryManList.getEntry(selection[0]).setAddress(newFullAddress);
                                             File.storeList(deliveryManList, DELIVERYMANFILE);
@@ -1694,12 +1720,12 @@ public class Main {
                             } while (loop[1] == true);
 
                         }
-                    } else {
+                    } else {//Prompt error
                         System.out.println("Please select option [0-" + count + "] only.");
                         loop[0] = true;
                     }
                 }
-            } else {
+            } else {//No delivery man found
                 System.out.println("No delivery man found in database.");
             }
         } while (loop[0] == true);
@@ -1713,13 +1739,14 @@ public class Main {
 
     private static void updateDeliveryManStatus() {
         Scanner scanner = new Scanner(System.in);
+        //Retrieve delivery man list
         ListInterface<DeliveryMan> deliveryManList = File.retrieveList(DELIVERYMANFILE);
-        DeliveryMan.setNextID(1000 + deliveryManList.getNumberOfEntries());
         int count = deliveryManList.getNumberOfEntries();
         int selection[] = new int[2];
         boolean loop[] = new boolean[2];
         do {
             loop[0] = false;
+            //Display delivery man list
             System.out.println("Update Delivery Man Status");
             System.out.println("===================================");
             System.out.println(String.format("%-3s %-4s %-10s %-20s %-6s %-12s %-14s %-20s %-12s %-80s %-10s %-14s", "NO.", "ID", "USERNAME", "NAME", "GENDER", "CONTACT_NO", "NRIC", "EMAIL", "BASIC_SALARY", "ADDRESS", "STATUS", "WORKING_STATUS"));
@@ -1728,6 +1755,7 @@ public class Main {
             }
             if (count != 0) {
                 System.out.print("Please select a delivery man you want to update (0 to cancel): ");
+                //Check is numeric value
                 if (!scanner.hasNextInt()) {
                     System.out.println("Please enter numeric value only.");
                     scanner.nextLine();
@@ -1735,6 +1763,7 @@ public class Main {
                 } else {
                     selection[0] = scanner.nextInt();
                     scanner.nextLine();
+                    //Check valid option
                     if (selection[0] >= 0 && selection[0] <= count) {
                         if (selection[0] != 0) {//Not select cancel
                             do {
@@ -1756,6 +1785,7 @@ public class Main {
                                 System.out.println("5. Other Status");
                                 System.out.println("0. Reselect Delivery Man");
                                 System.out.print("Selection: ");
+                                //Check valid option
                                 if (!scanner.hasNext("[012345]{1}")) {
                                     System.out.println("Please select option [0-5] only.");
                                     scanner.nextLine();
@@ -1783,6 +1813,7 @@ public class Main {
                                                 newStatus = scanner.nextLine();
                                                 break;
                                         }
+                                        //Update & Store delivery man list
                                         deliveryManList.getEntry(selection[0]).setStatus(newStatus);
                                         File.storeList(deliveryManList, DELIVERYMANFILE);
                                         System.out.println("Status Updated to '" + newStatus + "' Successfully!!!");
@@ -1803,7 +1834,7 @@ public class Main {
                         loop[0] = true;
                     }
                 }
-            } else {
+            } else {//No delivery man found
                 System.out.println("No delivery man found in database.");
             }
         } while (loop[0] == true);
@@ -1817,6 +1848,7 @@ public class Main {
 
     private static void generateDailyReport() {
         Scanner scanner = new Scanner(System.in);
+        //Retrieve delivery list
         ListInterface<Delivery> deliveryList = File.retrieveList(DELIVERYFILE);
         boolean loop[] = new boolean[2];
         do {
@@ -1843,7 +1875,7 @@ public class Main {
                 for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
                     deliveryManId[i - 1] = deliveryManList.getEntry(i).getId();
                 }
-                //Set deliveryCompleted and distanceTravelled for each deliveryManId
+                //Set total deliveryCompleted and distanceTravelled for each deliveryManId
                 for (int i = 1; i <= deliveryList.getNumberOfEntries(); i++) {
                     if (deliveryList.getEntry(i).getStatus().equalsIgnoreCase("Delivered")) {//Check delivery status
                         GregorianCalendar deliveryDate = deliveryList.getEntry(i).getDeliveryDate();
@@ -1874,17 +1906,22 @@ public class Main {
                 //Print Report in descending order
                 System.out.println("                            DAILY DELIVERY REPORT");
                 System.out.printf("                                %02d-%02d-%04d\n", day, month, year);
-                System.out.printf("%-4s %-20s %-6s %-12s %-13s %-13s\n", "ID", "NAME", "GENDER", "CONTACT_NO", "OOMPLETED_DEL", "DIST_TRAVELLED(m)");
+                System.out.printf("%-4s %-20s %-6s %-12s %-13s %-13s\n", "ID", "NAME", "GENDER", "CONTACT_NO", "COMPLETED_DEL", "DIST_TRAVELLED(m)");
                 for (int i = reportList.getLength(); i >= 1; i--) {
                     System.out.println(reportList.getEntry(i));
                 }
-                if (count == 0) {
+                if (count == 0) {//No delivery man found
                     System.out.println("No Delivery Man Found");
                 }
             }
 
         } while (loop[0]);
-
+        System.out.println("You will be returned back to operation list in 3 seconds...");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private static void registerAsAffiliate() {

@@ -170,20 +170,4 @@ public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements 
             nodeAfter.previous = nodeBefore;
         }
     }
-
-    public static void main(String[] args) {
-        SortedListInterface<String> sortedList = new SortedDoublyLinkedList<>();
-        sortedList.add("3");
-        sortedList.add("1");
-        sortedList.add("2");
-        sortedList.add("5");
-        sortedList.add("0");
-        for (int i = 1; i <= sortedList.getLength(); i++) {
-            System.out.print(sortedList.getEntry(i) + " ");
-        }
-        System.out.println("\n" + sortedList.remove("5"));
-        for (int i = 1; i <= sortedList.getLength(); i++) {
-            System.out.print(sortedList.getEntry(i) + " ");
-        }
-    }
 }

@@ -16,5 +16,4 @@ public interface LinearDoublyListInterface<T> {
 
     public void clear();
 
-
 }

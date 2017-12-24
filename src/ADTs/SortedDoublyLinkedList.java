@@ -71,7 +71,7 @@ public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements 
                 found = true;
             } else {
                 currentNode = currentNode.next;
-            }           
+            }
         }
         if (found) {
             removeCurrentNode(currentNode);
@@ -152,7 +152,7 @@ public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements 
     public boolean isFull() {
         return false;
     }
-    
+
     private void removeCurrentNode(Node currentNode) {
         if (currentNode.previous == null && currentNode.next == null) {//Remove only node
             firstNode = null;
@@ -181,7 +181,7 @@ public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements 
         for (int i = 1; i <= sortedList.getLength(); i++) {
             System.out.print(sortedList.getEntry(i) + " ");
         }
-        System.out.println("\n"+ sortedList.remove("5"));
+        System.out.println("\n" + sortedList.remove("5"));
         for (int i = 1; i <= sortedList.getLength(); i++) {
             System.out.print(sortedList.getEntry(i) + " ");
         }

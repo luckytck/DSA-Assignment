@@ -2,6 +2,9 @@ package ADTs;
 
 import java.io.Serializable;
 
+/**
+ * @author Wong Li Yi
+ */
 public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, Serializable {
 
     private Node firstNode, lastNode;

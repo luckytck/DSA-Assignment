@@ -1,6 +1,7 @@
 package ADTs;
 
 import java.io.Serializable;
+
 /**
  * @author Tan Cheong Kiat
  */
@@ -12,7 +13,7 @@ public class CircularDoublyLinkedQueue<T> implements QueueInterface<T>, Serializ
     public CircularDoublyLinkedQueue() {
         clear();
     }
-    
+
     private class Node implements Serializable {
 
         private T data;
@@ -72,7 +73,7 @@ public class CircularDoublyLinkedQueue<T> implements QueueInterface<T>, Serializ
         }
         return data;
     }
-    
+
     @Override
     public int getNumberOfEntries() {
         return numberOfEntries;
@@ -91,7 +92,7 @@ public class CircularDoublyLinkedQueue<T> implements QueueInterface<T>, Serializ
         firstNode = null;
         numberOfEntries = 0;
     }
-    
+
     public static void main(String[] args) {
         QueueInterface<Integer> queue = new CircularDoublyLinkedQueue<>();
         queue.enqueue(1);

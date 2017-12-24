@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ADTs;
 
 import java.io.Serializable;
@@ -11,11 +6,11 @@ import java.io.Serializable;
  *
  * @author ShiouChein
  */
-public class LinkedQueue <T> implements QueueInterface<T>, Serializable{
+public class LinkedQueue<T> implements QueueInterface<T>, Serializable {
 
     private Node firstNode, lastNode;
     private int numberOfEntries;
-    
+
     private class Node implements Serializable {
 
         private T data;
@@ -34,7 +29,7 @@ public class LinkedQueue <T> implements QueueInterface<T>, Serializable{
     public LinkedQueue() {
         clear();
     }
-    
+
     @Override
     public void enqueue(T newEntry) {
         Node newNode = new Node(newEntry);
@@ -42,13 +37,14 @@ public class LinkedQueue <T> implements QueueInterface<T>, Serializable{
         lastNode = newNode;
         lastNode.data = newEntry;
         lastNode.next = null;
-        
-        if(isEmpty())
+
+        if (isEmpty()) {
             firstNode = lastNode;
-        else
+        } else {
             oldRear.next = lastNode;
-        
-        numberOfEntries ++;
+        }
+
+        numberOfEntries++;
     }
 
     @Override
@@ -56,11 +52,12 @@ public class LinkedQueue <T> implements QueueInterface<T>, Serializable{
         T data = null;
         data = firstNode.data;
         firstNode = firstNode.next;
-        
-        if(isEmpty())
+
+        if (isEmpty()) {
             lastNode = null;
-        
-        numberOfEntries --;
+        }
+
+        numberOfEntries--;
         return data;
     }
 
@@ -90,14 +87,14 @@ public class LinkedQueue <T> implements QueueInterface<T>, Serializable{
     public int getNumberOfEntries() {
         return numberOfEntries;
     }
-    
+
     public static void main(String[] args) {
         QueueInterface<Integer> test = new LinkedQueue<>();
-        
+
         test.enqueue(123);
         test.enqueue(145);
         System.out.println(test.dequeue());
         System.out.println("Front:" + test.getFront());
     }
-    
+
 }

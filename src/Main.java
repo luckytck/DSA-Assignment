@@ -326,7 +326,7 @@ public class Main {
 
     public static void placeAdHocOrder(String username) {
 
-        //Get customer's details
+        //Retrieve customer's details
         ListInterface<Customer> customerList = File.retrieveList(CUSTOMERFILE);
         Customer customer = new Customer();
         for (int i = 1; i <= customerList.getNumberOfEntries(); i++) {
@@ -340,7 +340,7 @@ public class Main {
         ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
         String aff;
 
-        //Get user choice of food & beverage
+        //Get customer choice of food & beverage
         int choice = 0, menu = 0, food = 0, foodQty = 0, beverage = 0, beverageQty = 0, index;
         String foodRemark, bvgRemark;
         double totalPrice = 0;
@@ -348,12 +348,14 @@ public class Main {
         GregorianCalendar orderDate = new GregorianCalendar();
         Scanner scanner = new Scanner(System.in);
 
+        // Show the available restaurants for the customer
         System.out.println("No.\t Restaurants");
         System.out.println("======================");
         for (int i = 1; i <= affiliateList.getNumberOfEntries(); i++) {
             System.out.println(i + "\t" + affiliateList.getEntry(i).getRestaurantName());
         }
 
+        // Prompt customer select a restaurant to view menu
         do {
             System.out.print("Please select a restaurant> ");
             if (!scanner.hasNext("[1-" + affiliateList.getNumberOfEntries() + "]{1}")) {
@@ -370,10 +372,11 @@ public class Main {
         index = File.getAffiliateIndex(aff, AFFILIATEFILE);
         Affiliate affiliate = new Affiliate();
         affiliate = (Affiliate) affiliateList.getEntry(index);
-        File.printWholeMenu(index);
+        File.printWholeMenu(index); //Display the menu list of a certain restaurant which selected by the customer
 
+        //Store the menu item (food & beverage) which selected by the customer
         ListInterface<OrderItem> orderMenu = new LinearSinglyLinkedList<>();
-        OrderItem order = new OrderItem(); //temperory store the menu which choose by customer
+        OrderItem order = new OrderItem(); 
 
         do {
             do {
@@ -390,6 +393,7 @@ public class Main {
             switch (menu) {
                 case 1:
                     do {
+                        //Prompt customer to enter food number
                         System.out.print("Please enter your food number> ");
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
                             System.out.println("Please enter valid food number only");
@@ -405,6 +409,7 @@ public class Main {
                             || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
 
                     do {
+                        //Prompt customer to enter food quantity
                         System.out.print("Quantity> ");
                         foodQty = scanner.nextInt();
                         scanner.nextLine();
@@ -413,10 +418,13 @@ public class Main {
                         }
                     } while (foodQty < 1);
 
+                    //Prompt customer to enter special remark
                     System.out.print("Any special remark? Please state down> ");
                     foodRemark = scanner.nextLine();
-
+                    
+                    //Get the index number of food which arranged by "Newest" or "Promote"
                     int datIndex = File.getDatMenuItemIndex(index, menu, food);
+                    //Store the selected food item, quantity and remark into the list
                     order.setMenuItem(affiliateList.getEntry(index).getFood().getEntry(datIndex));
                     order.setQuantity(foodQty);
                     order.setRemark(foodRemark);
@@ -427,6 +435,7 @@ public class Main {
 
                 case 2:
                     do {
+                        //Prompt customer to enter beverage number
                         System.out.print("Please enter your beverage number> ");
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
                             System.out.println("Please enter valid beverage number only");
@@ -443,6 +452,7 @@ public class Main {
                             || affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable"));
 
                     do {
+                        //Prompt customer to enter beverage quantity
                         System.out.print("Quantity> ");
                         beverageQty = scanner.nextInt();
                         scanner.nextLine();
@@ -451,10 +461,13 @@ public class Main {
                         }
                     } while (beverageQty < 1);
 
+                    //Prompt customer to enter special remark
                     System.out.print("Any special remark? Please state down> ");
                     bvgRemark = scanner.nextLine();
-                    menu = 2;
+                    
+                    //Get the index number of food which arranged by "Newest" or "Promote"
                     int dat2Index = File.getDatMenuItemIndex(index, menu, beverage);
+                    //Store the selected beverage item, quantity and remark into the list
                     order.setMenuItem(affiliateList.getEntry(index).getBeverage().getEntry(dat2Index));
                     order.setQuantity(beverageQty);
                     order.setRemark(bvgRemark);
@@ -462,6 +475,7 @@ public class Main {
                     order = new OrderItem();
                     break;
 
+                    //Exit order function
                 case 0:
                     System.out.println("Thanks for using this function. See you again~");
                     System.exit(0);
@@ -470,12 +484,14 @@ public class Main {
             }
 
             System.out.println("\n");
+            //Prompt customer to order more food/beverage
             System.out.print("Wanna choose other food/beverage? (Y=Yes, N=No)> ");
             more = scanner.next().charAt(0);
             scanner.nextLine();
 
         } while (Character.toUpperCase(more) == 'Y');
 
+        //Order confirmation
         System.out.println("CONFIRM YOUR ORDER:");
         System.out.println("===================");
         System.out.println("No.\tItem\t\t\tUnit Price\tDiscount Price\t\tQuantity\tSub Total\tRemark");
@@ -495,6 +511,7 @@ public class Main {
         confirm = scanner.next().charAt(0);
         scanner.nextLine();
 
+        //If the customer confirm the order, the system will store the order into Order & PendingDelivery file
         if (Character.toUpperCase(confirm) == 'Y') {
             ListInterface<Order> orderList = File.retrieveList(ORDERFILE);
             Order.setNextOrderNo(1000 + orderList.getNumberOfEntries());
@@ -1304,13 +1321,16 @@ public class Main {
         char gender = 0;
         boolean exist = false;
 
+        //Retrieve all the customer details from Customer file
         ListInterface<Customer> customer = File.retrieveList(CUSTOMERFILE);
 
         do {
+            //Prompt deliveryman to enter customer's contact number
             Scanner phoneNo = new Scanner(System.in);
             System.out.print("Please enter customer phone no.(01x-xxxxxxxx):");
             phone = phoneNo.next();
 
+            //Validate the format of the contact number
             if (Validation.ValidateContactNumber(phone) == true) {
                 for (int i = 1; i <= customer.getNumberOfEntries(); i++) {
                     findPhoneNo = customer.getEntry(i).getContactNo();
@@ -1332,6 +1352,7 @@ public class Main {
             }
         } while (Validation.ValidateContactNumber(phone) == false);
 
+        //Display the customer details if the customer is found
         if (exist == true) {
             System.out.println("\nCustomer details");
             System.out.println("================");
@@ -1339,8 +1360,10 @@ public class Main {
             System.out.println("Gender: " + gender);
             System.out.println("Contact No.:" + phone);
             System.out.println("Delivery address: " + address + ", " + postcode + " " + city + ", " + state);
+            System.out.println("\n");
         } else {
             System.out.println("Sorry,no such customer in the record. Thank you");
+            System.out.println("\n");
         }
     }
 

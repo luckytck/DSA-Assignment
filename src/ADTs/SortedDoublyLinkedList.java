@@ -3,7 +3,6 @@ package ADTs;
 import java.io.Serializable;
 
 /**
- *
  * @author Tan Cheong Kiat
  */
 public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements SortedListInterface<T>, Serializable {
@@ -82,12 +81,16 @@ public class SortedDoublyLinkedList<T extends Comparable<? super T>> implements 
 
     @Override
     public int getPosition(T anEntry) {;
-        for (int i = 1; i <= numberOfEntries; i++) {
-            if (getEntry(i) == anEntry) {
-                return i;
+        int position = 1;
+        Node currentNode = firstNode;
+        while (position <= numberOfEntries && anEntry.compareTo(currentNode.data) >= 0){
+            if (anEntry.compareTo(currentNode.data) == 0) {
+                return position;
             }
+            position++;
+            currentNode = currentNode.next;
         }
-        return -1;
+        return -position;
     }
 
     @Override

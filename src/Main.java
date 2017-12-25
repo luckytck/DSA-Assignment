@@ -390,7 +390,7 @@ public class Main {
                         System.out.print("Please enter your food number> ");
                         //Validate the food number input, it only can be in the choice range 
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
-                            food = scanner.nextInt();
+                            scanner.next();
                             System.out.println("Please enter valid food number only");
 
                         } else {
@@ -434,7 +434,7 @@ public class Main {
                         System.out.print("Please enter your beverage number> ");
                         //Validate the beverage number input, it only can be in the choice range
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
-                            beverage = scanner.nextInt();
+                            scanner.next();
                             System.out.println("Please enter valid beverage number only");
                         } else {
                             beverage = scanner.nextInt();
@@ -488,14 +488,14 @@ public class Main {
         //Order confirmation
         System.out.println("CONFIRM YOUR ORDER:");
         System.out.println("===================");
-        System.out.println("No.\tItem\t\t\tUnit Price\tDiscount Price\t\tQuantity\tSub Total\tRemark");
+        System.out.println("No.\tItem\t\t\tUnit Price\tDiscount Price\t\tQuantity\tSub Total\t\tRemark");
         for (int i = 1; i <= orderMenu.getNumberOfEntries(); ++i) {
             System.out.println(i + "\t" + orderMenu.getEntry(i).getMenuItem().getName()
                     + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).getMenuItem().getPrice())
                     + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).calPriceAfterDiscount())
                     + "\t\t\t" + orderMenu.getEntry(i).getQuantity()
                     + "\t\t" + String.format("%.2f", orderMenu.getEntry(i).calSubTotal())
-                    + "\t" + orderMenu.getEntry(i).getRemark());
+                    + "\t\t\t" + orderMenu.getEntry(i).getRemark());
             totalPrice += orderMenu.getEntry(i).calSubTotal();
         }
         System.out.println("\n");

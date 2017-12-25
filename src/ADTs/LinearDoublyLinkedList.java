@@ -87,7 +87,7 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
     @Override
     public T getEntry(int givenPosition) {
         T data = null;
-        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {//serch entry between 1 and last entry
+        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {//search entry between 1 and last entry
             Node nodeCurrent = firstNode;
             for (int i = 1; i <= givenPosition - 1; i++) {
                 nodeCurrent = nodeCurrent.next;

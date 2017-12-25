@@ -341,7 +341,7 @@ public class File {
                         System.out.println(outputStr);
                     } else if (list.getEntry(index).getSortBy().equals("Promotion")) {
                         ListInterface<MenuItem> menulist = new LinearSinglyLinkedList<>();
-                        //sort thr item by discount rate
+                        //sort the item by discount rate
                         while (!list.getEntry(index).getBeverage().isEmpty()) {
                             int indexAddtoList = -1;
                             double bigest = -1;

@@ -3,7 +3,7 @@ package ADTs;
 import java.io.Serializable;
 
 /**
- * @author Tan Qi Han
+ * @author Tan Qi Han & ShiouChein
  */
 public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable {
 
@@ -34,16 +34,16 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     public boolean add(T newEntry) {
         Node newNode = new Node(newEntry);
         if (firstNode == null) {
-            firstNode = newNode;
+            firstNode = newNode; //If firstNode is null, then add the newEntry into firstNode
         } else {
             Node temp = firstNode;
-            while (temp.next != null) {
+            while (temp.next != null) { //Add the newEntry at the end of list
                 temp = temp.next;
             }
             temp.next = newNode;
         }
-        numberOfEntries++;
-        return true;
+        numberOfEntries++;  //Increment the size of the list
+        return true;        //Return true when the newEntry is added successfully
     }
 
     @Override
@@ -53,8 +53,8 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
         if (newPosition > 0 && newPosition <= numberOfEntries) {
             Node newNode = new Node(newEntry);
 
-            if (numberOfEntries == 0 || newPosition == 1) {
-                newNode.next = firstNode;
+            if (numberOfEntries == 0 || newPosition == 1) { //If the size of list is empty or the position = 1 
+                newNode.next = firstNode; //Add the newEntry into the first position
                 firstNode = newNode;
             } else {
                 Node nodeBefore = firstNode;
@@ -62,23 +62,23 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
                     nodeBefore = nodeBefore.next;
                 }
                 newNode.next = nodeBefore.next;
-                nodeBefore.next = newNode;
+                nodeBefore.next = newNode; //Add the newEntry after the nodeBefore
 
             }
-            numberOfEntries++;
+            numberOfEntries++;  //Increment the size of the list
         } else {
-            added = false;
+            added = false;  //False when the newEntry doesn't add successfully
         }
         return added;
     }
 
     @Override
-    public T remove(int givenPosition) {
+    public T remove(int givenPosition) {    //Remove the data at the given position
         T result = null;
         if (givenPosition >= 1 && givenPosition <= numberOfEntries) {
             if (givenPosition == 1) {
                 result = firstNode.data;
-                firstNode = firstNode.next;
+                firstNode = firstNode.next; //Shift the data to the left
             } else {
                 Node nodeBefore = firstNode;
                 for (int i = 1; i < givenPosition - 1; ++i) {
@@ -87,7 +87,7 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
                 result = nodeBefore.next.data;
                 nodeBefore.next = nodeBefore.next.next;
             }
-            numberOfEntries--;
+            numberOfEntries--;  //Decrement the size of the list
 
         }
         return result;
@@ -95,8 +95,8 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
 
     @Override
     public void clear() {
-        firstNode = null;
-        numberOfEntries = 0;
+        firstNode = null;   //Clear the firstNode  
+        numberOfEntries = 0;    //Clear the size of the list
     }
 
     @Override
@@ -107,16 +107,16 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
             for (int i = 0; i < givenPosition - 1; ++i) {
                 currentNode = currentNode.next;
             }
-            currentNode.data = newEntry;
+            currentNode.data = newEntry;    //Replace the given position data with the new entry
         } else {
             successful = false;
         }
-        return successful;
+        return successful;  //Rturn true when replace successfully
 
     }
 
     @Override
-    public T getEntry(int givenPosition) {
+    public T getEntry(int givenPosition) {  //Get the current index/position of the data
         T result = null;
         if (givenPosition >= 1 && givenPosition <= numberOfEntries) {
             Node currentNode = firstNode;
@@ -129,7 +129,7 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     }
 
     @Override
-    public boolean contains(T anEntry) {
+    public boolean contains(T anEntry) {    //Return true when the list contains the particular data
         boolean found = false;
         Node currentNode = firstNode;
 
@@ -145,12 +145,12 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     }
 
     @Override
-    public int getNumberOfEntries() {
+    public int getNumberOfEntries() {   //Return the size of the list
         return numberOfEntries;
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty() {  //Check whether the list is empty
         if (numberOfEntries == 0) {
             return true;
         } else {

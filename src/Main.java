@@ -333,7 +333,7 @@ public class Main {
 
             if (customerList.getEntry(i).getUsername().equals(username)) {
                 int custIndex = i;
-                customer = (Customer) customerList.getEntry(custIndex);
+                customer = (Customer) customerList.getEntry(custIndex); //get the customer index
             }
         }
 
@@ -348,14 +348,14 @@ public class Main {
         GregorianCalendar orderDate = new GregorianCalendar();
         Scanner scanner = new Scanner(System.in);
 
-        // Show the available restaurants for the customer
+        //Show the available restaurants for the customer
         System.out.println("No.\t Restaurants");
         System.out.println("======================");
         for (int i = 1; i <= affiliateList.getNumberOfEntries(); i++) {
             System.out.println(i + "\t" + affiliateList.getEntry(i).getRestaurantName());
         }
 
-        // Prompt customer select a restaurant to view menu
+        //Prompt customer select a restaurant to view menu
         do {
             System.out.print("Please select a restaurant> ");
             if (!scanner.hasNext("[1-" + affiliateList.getNumberOfEntries() + "]{1}")) {
@@ -395,18 +395,20 @@ public class Main {
                     do {
                         //Prompt customer to enter food number
                         System.out.print("Please enter your food number> ");
+                        //Validate the food number input, it only can be integeer & in the choice range 
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
                             System.out.println("Please enter valid food number only");
                         } else {
                             food = scanner.nextInt();
 
+                            //Validate the food status, if is "unavailable", cannot choose the food 
                             if (affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable")) {
                                 System.out.println("This food item unavailable, please choose again.");
                             }
-                        }
-                        scanner.nextLine();
+                        } 
                     } while (food < 1 || food > affiliateList.getEntry(index).getFood().getNumberOfEntries()
                             || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
+                    scanner.nextLine();
 
                     do {
                         //Prompt customer to enter food quantity
@@ -437,19 +439,21 @@ public class Main {
                     do {
                         //Prompt customer to enter beverage number
                         System.out.print("Please enter your beverage number> ");
+                        //Validate the beverage number input, it only can be integeer & in the choice range
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
                             System.out.println("Please enter valid beverage number only");
                         } else {
                             beverage = scanner.nextInt();
 
+                            //Validate the beverage status, if is "unavailable", cannot choose the beverage 
                             if (affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable")) {
                                 System.out.println("This beverage item unavailable, please choose again.");
                             }
                         }
-                        scanner.nextLine();
-
                     } while (beverage < 1 || beverage > affiliateList.getEntry(index).getBeverage().getNumberOfEntries()
                             || affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable"));
+                    
+                    scanner.nextLine();
 
                     do {
                         //Prompt customer to enter beverage quantity

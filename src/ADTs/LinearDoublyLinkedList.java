@@ -49,15 +49,15 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
         if (!found) {
             return false;
         } else {
-            if (firstNode == lastNode) {
+            if (firstNode == lastNode) {//to remove 1 and only node
                 firstNode = lastNode = null;
 
-            } else if (temp.previous == null) {
-                firstNode = temp.next;
+            } else if (temp.previous == null) {//to remove 1st node
+                firstNode = temp.next;//firstNode = firstNode.next
                 firstNode.previous = null;
 
-            } else if (temp == lastNode) {
-                lastNode = temp.previous;
+            } else if (temp == lastNode) {//to remove last node
+                lastNode = temp.previous;//lastNode = lastNode.previous;
                 lastNode.next = null;
             } else {
                 temp.previous.next = temp.next;
@@ -92,7 +92,7 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
     @Override
     public T getEntry(int givenPosition) {
         T data = null;
-        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {
+        if (givenPosition >= 1 && givenPosition <= numberOfEntries) {//serch entry between 1 and last entry
             Node nodeCurrent = firstNode;
             for (int i = 1; i <= givenPosition - 1; i++) {
                 nodeCurrent = nodeCurrent.next;

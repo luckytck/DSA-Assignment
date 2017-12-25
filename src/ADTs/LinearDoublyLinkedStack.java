@@ -9,15 +9,15 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
     @Override
     public void push(T newEntry) {
         
-        if (isEmpty()) {
+        if (isEmpty()) {//to check whether the stack is empty
             Node newNode = new Node(newEntry);
              topNode=newNode;
              topNode.next=null;
              topNode.previous=null;
         } else {
-            Node newNode = new Node(newEntry,topNode,null);        
+            Node newNode = new Node(newEntry,topNode,null); //assign the pointer between each other    
            topNode.previous=newNode;
-           topNode=newNode;
+           topNode=newNode;//newNode becom ethe new top
         }
        
     }
@@ -25,9 +25,9 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
     @Override
     public T pop() {
         
-        if(!isEmpty()){
+        if(!isEmpty()){//if the stack is not empty
            T data=topNode.data;
-            topNode=topNode.next;          
+            topNode=topNode.next;//second Node become the new top     
             return data;
         }
         return null;
@@ -36,7 +36,7 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
     @Override
     public T peek() {
       if(!isEmpty()){
-          return topNode.data;
+          return topNode.data;//return the top value but without remove it
       }else
           return null;
         
@@ -44,7 +44,7 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if(topNode==null)
+        if(topNode==null)//to check whether the top is empty or not
             return true;
         else
             return false;
@@ -52,7 +52,7 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
 
     @Override
     public void clear() {
-       while(!isEmpty()){
+       while(!isEmpty()){//to remove all the pointing between each other
            Node temp=topNode;
            topNode=topNode.next;
            topNode.previous=null;

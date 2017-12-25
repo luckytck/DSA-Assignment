@@ -1,5 +1,10 @@
 package ADTs;
 
+/**
+ *
+ * @author Wong Li Yi
+ */
+
 public interface LinearDoublyListInterface<T> {
 
     public void add(T newEntry);

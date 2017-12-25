@@ -17,7 +17,6 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
     @Override
     public void add(T newEntry) {
         Node newNode = new Node(newEntry);
-
         if (firstNode == null) {
             firstNode = newNode;
             lastNode = newNode;
@@ -26,7 +25,6 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
             newNode.previous = lastNode;
         }
         lastNode = newNode;
-
         numberOfEntries++;
     }
 
@@ -51,11 +49,9 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
         } else {
             if (firstNode == lastNode) {//to remove 1 and only node
                 firstNode = lastNode = null;
-
             } else if (temp.previous == null) {//to remove 1st node
                 firstNode = temp.next;//firstNode = firstNode.next
                 firstNode.previous = null;
-
             } else if (temp == lastNode) {//to remove last node
                 lastNode = temp.previous;//lastNode = lastNode.previous;
                 lastNode.next = null;
@@ -64,7 +60,6 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
                 temp.next.previous = temp.previous;
             }
             return true;
-
         }
     }
 
@@ -138,7 +133,5 @@ public class LinearDoublyLinkedList<T> implements LinearDoublyListInterface<T>, 
             this.next = next;
             this.previous = previous;
         }
-
     }
-
 }

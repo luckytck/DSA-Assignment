@@ -164,38 +164,4 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     public boolean isFull() {
         return false;
     }
-
-    public static void main(String[] args) {
-        ListInterface<Integer> list = new CircularDoublyLinkedList<>();
-        System.out.println("Add 1: " + list.add(1));
-        System.out.println("Add 3: " + list.add(3));
-        System.out.println("Add 2 at position 2: " + list.add(2, 2));
-        System.out.println("Add 4 at position 4: " + list.add(4, 4));
-        System.out.println("Add 0 at position 1: " + list.add(1, 0));
-        System.out.print("List: ");
-        for (int i = 1; i <= list.getNumberOfEntries(); i++) {
-            System.out.print(list.getEntry(i) + " ");
-        }
-        System.out.println("\nReplace 10 at position 5: " + list.replace(5, 10));
-        System.out.print("List: ");
-        for (int i = 1; i <= list.getNumberOfEntries(); i++) {
-            System.out.print(list.getEntry(i) + " ");
-        }
-        System.out.println("\nRemove data at position 5: " + list.remove(5));
-        System.out.print("List: ");
-        for (int i = 1; i <= list.getNumberOfEntries(); i++) {
-            System.out.print(list.getEntry(i) + " ");
-        }
-        System.out.println("\nContains 1: " + list.contains(1));
-        System.out.println("Contains 10: " + list.contains(10));
-        System.out.println("Is Full? : " + list.isFull());
-        System.out.println("Is Empty? : " + list.isEmpty());
-        for (int i = list.getNumberOfEntries(); i >= 1; i--) {
-            System.out.print("Remove data at position " + i + ": ");
-            System.out.print(list.remove(i) + "\n");
-        }
-        System.out.println(list.add(1));
-        System.out.println(list.add(2));
-        System.out.println(list.getEntry(2));
-    }
 }

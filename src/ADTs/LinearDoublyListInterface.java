@@ -4,7 +4,6 @@ package ADTs;
  *
  * @author Wong Li Yi
  */
-
 public interface LinearDoublyListInterface<T> {
 
     public void add(T newEntry);
@@ -20,5 +19,4 @@ public interface LinearDoublyListInterface<T> {
     public int getNumberOfEntries();
 
     public void clear();
-
 }

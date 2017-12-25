@@ -1,7 +1,6 @@
 package Classes;
 
 import ADTs.CircularDoublyLinkedList;
-import ADTs.CircularDoublyLinkedQueue;
 import ADTs.LinearDoublyLinkedList;
 import ADTs.LinearDoublyLinkedStack;
 import ADTs.LinearDoublyListInterface;
@@ -90,7 +89,7 @@ public class File {
      * not exist or the file does not contains a queue
      */
     public static <T> QueueInterface<T> retrieveQueue(String fileName) {
-        QueueInterface<T> queue = new CircularDoublyLinkedQueue<>();
+        QueueInterface<T> queue = new LinkedQueue<>();
         try {
             ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(fileName));
             queue = (QueueInterface<T>) (oiStream.readObject());

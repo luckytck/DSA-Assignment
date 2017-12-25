@@ -96,5 +96,4 @@ public class LinkedQueue<T> implements QueueInterface<T>, Serializable {
         System.out.println(test.dequeue());
         System.out.println("Front:" + test.getFront());
     }
-
 }

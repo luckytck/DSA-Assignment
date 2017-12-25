@@ -9,7 +9,6 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
 
     @Override
     public void push(T newEntry) {
-
         if (isEmpty()) {//to check whether the stack is empty
             Node newNode = new Node(newEntry);
             topNode = newNode;
@@ -20,12 +19,10 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
             topNode.previous = newNode;
             topNode = newNode;//newNode becom ethe new top
         }
-
     }
 
     @Override
     public T pop() {
-
         if (!isEmpty()) {//if the stack is not empty
             T data = topNode.data;
             topNode = topNode.next;//second Node become the new top     
@@ -62,7 +59,6 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
             topNode.previous = null;
             temp.next = null;
         }
-
     }
 
     private class Node {
@@ -80,6 +76,5 @@ public class LinearDoublyLinkedStack<T> implements StackInterface<T> {
             this.next = next;
             this.previous = previous;
         }
-
     }
 }

@@ -49,10 +49,8 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     @Override
     public boolean add(int newPosition, T newEntry) {
         boolean added = true;
-
         if (newPosition > 0 && newPosition <= numberOfEntries) {
             Node newNode = new Node(newEntry);
-
             if (numberOfEntries == 0 || newPosition == 1) { //If the size of list is empty or the position = 1 
                 newNode.next = firstNode; //Add the newEntry into the first position
                 firstNode = newNode;
@@ -63,7 +61,6 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
                 }
                 newNode.next = nodeBefore.next;
                 nodeBefore.next = newNode; //Add the newEntry after the nodeBefore
-
             }
             numberOfEntries++;  //Increment the size of the list
         } else {
@@ -88,7 +85,6 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
                 nodeBefore.next = nodeBefore.next.next;
             }
             numberOfEntries--;  //Decrement the size of the list
-
         }
         return result;
     }
@@ -112,7 +108,6 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
             successful = false;
         }
         return successful;  //Rturn true when replace successfully
-
     }
 
     @Override
@@ -132,7 +127,6 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     public boolean contains(T anEntry) {    //Return true when the list contains the particular data
         boolean found = false;
         Node currentNode = firstNode;
-
         while (!found && (currentNode != null)) {
             if (anEntry.equals(currentNode.data)) {
                 found = true;
@@ -140,7 +134,6 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
                 currentNode = currentNode.next;
             }
         }
-
         return found;
     }
 
@@ -162,5 +155,4 @@ public class LinearSinglyLinkedList<T> implements ListInterface<T>, Serializable
     public boolean isFull() {
         return false;
     }
-
 }

@@ -1,4 +1,3 @@
-
 package Classes;
 
 import java.io.Serializable;
@@ -18,7 +17,6 @@ public class Clocking implements Serializable{
         this.deliveryMan = deliveryMan;
         this.clockInTime = clockInTime;
     }
-    
 
     public Clocking(DeliveryMan deliveryMan, GregorianCalendar clockInTime, GregorianCalendar clockOutTime) {
         this.deliveryMan = deliveryMan;
@@ -107,5 +105,4 @@ public class Clocking implements Serializable{
         System.out.println(clocking1);
         System.out.println(clocking2);
     }
-    
 }

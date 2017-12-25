@@ -53,8 +53,7 @@ public class OrderItem implements Serializable{
     public String toString() {
         return String.format("%-30s %10s %8s %-20s %10s",menuItem.getName(), String.format("%.2f", calPriceAfterDiscount()), quantity, remark, String.format("%.2f", calSubTotal()));
     }
-    
-    
+
     public static void main(String[] args) {
         //Create MenuItems
         MenuItem menuItem1 = new MenuItem("Mee Goreng", "", 4.00, 0);

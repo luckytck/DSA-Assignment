@@ -1,4 +1,3 @@
-
 package Classes;
 
 import ADTs.CircularDoublyLinkedList;
@@ -101,18 +100,11 @@ public class Affiliate extends User implements Serializable{
     public String toString() {
         return super.toString() + String.format(" %-30s %-12s %-12s %-15s %-80s", restaurantName, businessRegNo, GSTRegNo, restaurantContactNo, address);
     }
-    
-    //You can put validation method in here. e.g below
-    //Call it using classname.methodname e.g Affiliate.validateBusinessRegNo("830776-U")
-    public static boolean validateBusinessRegNo(String businessRegNo){
-        //You can use regularExpression here
-        //Pattern...Matches...
-        return true;
-    }
-    
+
     public static void main(String[] args) { //Run it to understand
         Address address1 = new Address("AEON (Jusco) Cheras Selatan Shopping Centre", "Selangor", "Balakong", 43200);
         Address address2 = new Address("90, Jalan Peel, Maluri,", "Kuala Lumpur", "Wilayah Persekutuan", 55100);
+        
         //2 way to declare Affiliate object
         User affiliate1 = new Affiliate("Tealive", "962113-K", "000808083456", "03-62113891", address1, "chatime", "1234", "Bryan Loo", 'M', "012-3456789");
         Affiliate affiliate2 = new Affiliate("OldTown White Coffee", "830776-U", "000801587200", "03-12566852", address2, "oldtown", "1234", "Goh Ching Mun", 'M', "011-45621445");
@@ -120,16 +112,13 @@ public class Affiliate extends User implements Serializable{
         System.out.println(String.format("%-4s %-10s %-20s %-6s %-12s %-30s %-12s %-12s %-15s %-80s", "ID", "USERNAME", "OWNER_NAME", "GENDER", "CONTACT_NO", "RESTAURANT_NAME", "BUSS_REG_No", "GST_REG_NO", "REST_CONTACT_NO", "ADDRESS"));
         System.out.println(affiliate1);
         System.out.println(affiliate2);
+        
         //Note - If you want use getter & setter in child class, u need cast it to the child class first e.g below
         System.out.println(((Affiliate)affiliate1).getBusinessRegNo());
+        
         //Note - If you declare the class using child class name, you no need cast it to the child class e.g below
         System.out.println(affiliate2.getBusinessRegNo());
-        //Example to use static method using class name
-        if (Affiliate.validateBusinessRegNo("830776-U")) {
-            System.out.println("830776-U = " + "True");
-        } else {
-            System.out.println("830776-U = " + "False");
-        }
+
         //Example to store food to the affiliate class
         ListInterface<MenuItem> food1 = new CircularDoublyLinkedList<>();
          ListInterface<MenuItem> beverage1 = new CircularDoublyLinkedList<>();
@@ -152,12 +141,10 @@ public class Affiliate extends User implements Serializable{
         for (int i = 1; i <= food2.getNumberOfEntries(); i++) {
             System.out.println(food2.getEntry(i).toString());
         }
-        
         ListInterface<Affiliate> A=new CircularDoublyLinkedList<>();
         A.add(affiliate3);
         A.add(affiliate2);
          try {
-
             ObjectOutputStream ooStream = new ObjectOutputStream(new FileOutputStream("Affiliate.dat"));
             ooStream.writeObject(A);          
             ooStream.close();
@@ -165,9 +152,6 @@ public class Affiliate extends User implements Serializable{
             System.out.println("File not found");
         } catch (IOException ex) {
             System.out.println("Cannot save to file");
-
-        }
-        
-        
+        }   
     }
 }

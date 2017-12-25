@@ -1,4 +1,3 @@
-
 package Classes;
 
 import java.io.Serializable;
@@ -91,5 +90,4 @@ public class DeliveryMan extends User implements Serializable{
         System.out.println(user1);
         System.out.println(user2);
     }
-
 }

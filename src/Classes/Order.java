@@ -1,4 +1,3 @@
-
 package Classes;
 
 import ADTs.CircularDoublyLinkedList;
@@ -167,5 +166,4 @@ public class Order implements Serializable{
         }
         System.out.printf("%71s %10s\n", "Total = ", String.format("%.2f", order1.calTotalAmount()));
     }
-    
 }

@@ -122,7 +122,7 @@ public class Main {
                                                 System.out.println("0. Logout");
                                                 System.out.print("Selection: ");
                                                 if (!scanner.hasNext("[012]{1}")) {
-                                                    System.out.println("Please select option [0-3] only.");
+                                                    System.out.println("Please select option [0-2] only.");
                                                     scanner.nextLine();
                                                     loop[3] = true;
                                                 } else {
@@ -224,7 +224,7 @@ public class Main {
                                                 System.out.println("0. Logout");
                                                 System.out.print("Selection: ");
                                                 if (!scanner.hasNext("[01]{1}")) {
-                                                    System.out.println("Please selection option [0-2] only.");
+                                                    System.out.println("Please selection option [0-1] only.");
                                                     scanner.nextLine();
                                                     loop[3] = true;
                                                 } else {
@@ -325,18 +325,15 @@ public class Main {
     }
 
     public static void placeAdHocOrder(String username) {
-
         //Retrieve customer's details
         ListInterface<Customer> customerList = File.retrieveList(CUSTOMERFILE);
         Customer customer = new Customer();
         for (int i = 1; i <= customerList.getNumberOfEntries(); i++) {
-
             if (customerList.getEntry(i).getUsername().equals(username)) {
                 int custIndex = i;
                 customer = (Customer) customerList.getEntry(custIndex); //get the customer index
             }
         }
-
         ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
         String aff;
 
@@ -364,7 +361,6 @@ public class Main {
                 choice = scanner.nextInt();
             }
             scanner.nextLine();
-
         } while (choice < 1 || choice > affiliateList.getNumberOfEntries());
 
         //Get affiliate's details
@@ -376,15 +372,13 @@ public class Main {
 
         //Store the menu item (food & beverage) which selected by the customer
         ListInterface<OrderItem> orderMenu = new LinearSinglyLinkedList<>();
-        OrderItem order = new OrderItem(); 
+        OrderItem order = new OrderItem();
 
         do {
             do {
                 System.out.print("Order food/beverage? (1=Food, 2=Beverage, 0=Exit)> ");
-
                 menu = scanner.nextInt();
                 scanner.nextLine();
-
                 if (menu < 0 || menu > 2) {
                     System.out.println("Please enter number between 0 to 2 only");
                 }
@@ -399,7 +393,7 @@ public class Main {
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getFood().getNumberOfEntries() + "]{1}")) {
                             food = scanner.nextInt();
                             System.out.println("Please enter valid food number only");
-                            
+
                         } else {
                             food = scanner.nextInt();
                             //Validate the food status, if is "unavailable", cannot choose the food 
@@ -407,7 +401,6 @@ public class Main {
                                 System.out.println("This food item unavailable, please choose again.");
                             }
                         }
-                        
                     } while (food < 1 || food > affiliateList.getEntry(index).getFood().getNumberOfEntries()
                             || affiliateList.getEntry(index).getFood().getEntry(food).getStatus().equals("Unavailable"));
                     scanner.nextLine();
@@ -425,7 +418,7 @@ public class Main {
                     //Prompt customer to enter special remark
                     System.out.print("Any special remark? Please state down> ");
                     foodRemark = scanner.nextLine();
-                    
+
                     //Get the index number of food which arranged by "Newest" or "Promote"
                     int datIndex = File.getDatMenuItemIndex(index, menu, food);
                     //Store the selected food item, quantity and remark into the list
@@ -436,7 +429,6 @@ public class Main {
                     order = new OrderItem();
 
                     break;
-
                 case 2:
                     do {
                         //Prompt customer to enter beverage number
@@ -445,19 +437,15 @@ public class Main {
                         if (!scanner.hasNext("[1-" + affiliateList.getEntry(index).getBeverage().getNumberOfEntries() + "]{1}")) {
                             beverage = scanner.nextInt();
                             System.out.println("Please enter valid beverage number only");
-                            
                         } else {
                             beverage = scanner.nextInt();
                             //Validate the beverage status, if is "unavailable", cannot choose the beverage 
                             if (affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable")) {
                                 System.out.println("This beverage item unavailable, please choose again.");
-                                
                             }
                         }
-
                     } while (beverage < 1 || beverage > affiliateList.getEntry(index).getBeverage().getNumberOfEntries()
                             || affiliateList.getEntry(index).getBeverage().getEntry(beverage).getStatus().equals("Unavailable"));
-                    
                     scanner.nextLine();
 
                     do {
@@ -473,7 +461,7 @@ public class Main {
                     //Prompt customer to enter special remark
                     System.out.print("Any special remark? Please state down> ");
                     bvgRemark = scanner.nextLine();
-                    
+
                     //Get the index number of food which arranged by "Newest" or "Promote"
                     int dat2Index = File.getDatMenuItemIndex(index, menu, beverage);
                     //Store the selected beverage item, quantity and remark into the list
@@ -484,14 +472,12 @@ public class Main {
                     order = new OrderItem();
                     break;
 
-                    //Exit order function
+                //Exit order function
                 case 0:
                     System.out.println("Thanks for using this function. See you again~");
                     System.exit(0);
-
                     break;
             }
-
             System.out.println("\n");
             //Prompt customer to order more food/beverage
             System.out.print("Wanna choose other food/beverage? (Y=Yes, N=No)> ");
@@ -552,20 +538,20 @@ public class Main {
         System.out.println("===========");
 
         //Check order list is empty or not
-        if (!orderList.isEmpty()) { 
+        if (!orderList.isEmpty()) {
             System.out.println("Order No \t Restaurant \t\t Order Date \t Order Time \t Order Status \t\t Estimated Remaining Time ");
             for (int i = 1; i <= orderList.getNumberOfEntries(); i++) {
                 //match the usersame with the username in order list
                 if (username.equalsIgnoreCase(orderList.getEntry(i).getCustomer().getUsername())) {
 
                     GregorianCalendar orderDate = orderList.getEntry(i).getOrderDate();
-                    
+
                     //match order date with the today date
                     if (orderDate.get(Calendar.DAY_OF_MONTH) == currentDate.get(Calendar.DAY_OF_MONTH)
                             && orderDate.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
                             && orderDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
-                        
-                         //calculate the deliver remaining time for the order 
+
+                        //calculate the deliver remaining time for the order 
                         long hour = (currentDate.get(Calendar.HOUR_OF_DAY) - orderDate.get(Calendar.HOUR_OF_DAY)) * 60;
                         long minutes = currentDate.get(Calendar.MINUTE) - orderDate.get(Calendar.MINUTE);
                         long seconds = (currentDate.get(Calendar.SECOND) - orderDate.get(Calendar.SECOND)) / 60;
@@ -573,7 +559,7 @@ public class Main {
                         long diff = 60 - (hour + minutes + seconds);
 
                         //display the tracked order list to customer
-                        if (diff < 0) { 
+                        if (diff < 0) {
                             System.out.println(orderList.getEntry(i).getOrderNo() + "\t" + orderList.getEntry(i).getAffiliate().getRestaurantName() + "\t\t" + orderList.getEntry(i).printOrderDate()
                                     + "\t" + orderList.getEntry(i).printOrderTime() + "\t" + orderList.getEntry(i).getStatus() + "\t" + " delivered");
                             gotRecord = true;
@@ -745,7 +731,7 @@ public class Main {
                     }
                 }
             }
-            
+
         } while (choice != 1 && choice != 2);// loop when the selection not valid
     }
 
@@ -1017,7 +1003,7 @@ public class Main {
                             }
                             if (discount >= 0.0 && discount <= 100) {
                                 int datIndex = File.getDatMenuItemIndex(index, choice[1], choice[2]);
-                                
+
                                 affiliateList.getEntry(index).getBeverage().getEntry(datIndex).setDiscountRate(discount);
                                 File.storeList(affiliateList, AFFILIATEFILE);
                                 File.printMenuItem(index, choice[1]);
@@ -1118,14 +1104,13 @@ public class Main {
                     }
                 }
             }
-           
-        } while (choice != 1 && choice != 2);
 
+        } while (choice != 1 && choice != 2);
 
     }
 
     private static void removeItems(String username) {
-       ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
+        ListInterface<Affiliate> affiliateList = File.retrieveList(AFFILIATEFILE);
         int index = File.getAffiliateIndex(username, AFFILIATEFILE);
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -1212,7 +1197,6 @@ public class Main {
                     }
                 }
             }
-            
 
         } while (choice != 1 && choice != 2);
     }
@@ -1239,14 +1223,14 @@ public class Main {
                 //ask delivery man clock in
                 System.out.print("Are you want to clock in? [y/n]  ");
                 String selection = scanner.next();
-                
+
                 //delivery man choosed clock in
                 if (selection.matches("y")) {
                     GregorianCalendar clockInDate = null;
 
                     for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
                         if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
-                            
+
                             clockInDate = clockingList.getEntry(j).getClockInTime();
 
                             //check delivery man has clock in before or not
@@ -1262,7 +1246,7 @@ public class Main {
                     //delivery man already clocked in, display message
                     if (isClockIn == true) {
                         System.out.println("You are already clock in at " + Clocking.printDate(clockInDate) + " " + Clocking.printTime(clockInDate));
-                    //let delivery man clock in
+                        //let delivery man clock in
                     } else {
                         System.out.println("Clock In successfully!!");
                         System.out.println("Your Clock In Time for " + Clocking.printDate(currentDate) + " is " + Clocking.printTime(currentDate));
@@ -1292,21 +1276,21 @@ public class Main {
 
         System.out.println("\nClock Out");
         System.out.println("======");
-        
+
         //Validate delivery man
         for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
             checkUsername = deliveryManList.getEntry(i).getUsername();
-            
+
             //check delivery man user name
             if (checkUsername.equalsIgnoreCase(username)) {
                 System.out.print("Are you want to clock out? [y/n]  ");
                 String selection = scanner.next();
-                
+
                 //delivery man choose clock out
                 if (selection.matches("y")) {
                     boolean isClockIn = false;
                     GregorianCalendar clockInDate = null;
-                    
+
                     //check delivery man has clock in before or not
                     for (int j = 1; j <= clockingList.getNumberOfEntries(); j++) {
                         if (clockingList.getEntry(j).getDeliveryMan().getUsername().equalsIgnoreCase(username)) {
@@ -1408,11 +1392,11 @@ public class Main {
         GregorianCalendar clockInDate = null;
         String strDm;
         Scanner scanner = new Scanner(System.in);
-        
+
         //check delivery man list is empty or not
         if (!deliveryManList.isEmpty()) {
             String checkUsername;
-            
+
             //Validatae delivery man
             for (int i = 1; i <= deliveryManList.getNumberOfEntries(); i++) {
                 checkUsername = deliveryManList.getEntry(i).getUsername();
@@ -1522,7 +1506,7 @@ public class Main {
                 System.out.println("Order Status        : " + order.getStatus());
                 System.out.println("-----------------------------------------------------");
                 System.out.println("Order has been assigned to");
-                
+
                 //Assign Delivery Man
                 Delivery delivery = new Delivery();
                 int entry = 0;
@@ -2007,7 +1991,7 @@ public class Main {
     }
 
     private static void registerAsAffiliate() {
-         Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         ListInterface<Affiliate> affiliateList = new LinearSinglyLinkedList<>();
         affiliateList = File.retrieveList(AFFILIATEFILE);
 

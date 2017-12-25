@@ -1,4 +1,3 @@
-
 package Classes;
 
 import ADTs.CircularDoublyLinkedList;
@@ -169,6 +168,5 @@ public class Delivery implements Serializable{
         //Print Delivery
         System.out.printf("%-11s %-8s %-20s %-13s %16s %22s %-10s\n", "DELIVERY_NO", "ORDER_NO", "DELIVERY_MAN", "DELIVERY_DATE", "TIME_TAKEN(mins)", "DISTANCE_TRAVELLED(m)", "STATUS");
         System.out.println(delivery1);
-
     }
 }

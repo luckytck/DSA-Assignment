@@ -1,4 +1,3 @@
-
 package Classes;
 
 import java.io.Serializable;
@@ -61,8 +60,6 @@ public class MenuItem implements Serializable{
         this.status = status;
     }
     
-    
-
     @Override
     public String toString() {
         return String.format("%-30s %-30s %10s %12s %-15s", name, description, String.format("%.2f", price), String.format("%.0f",discountRate*100) + "%", status);
